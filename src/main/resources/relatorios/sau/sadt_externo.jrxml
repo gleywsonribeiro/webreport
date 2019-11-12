@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SADT EXTERNO" pageWidth="1000" pageHeight="792" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="6a5f5424-d1d6-4170-b987-b44e7a94adb3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1"/>
+	<parameter name="Data_Inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Data_Final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT PA.NM_PACIENTE,
+       EXA_RX.DS_EXA_RX,
+       pa.nr_fone,
+       pa.nr_ddd_fone,
+       pa.nr_ddd_celular,
+       pa.nr_celular,
+       P.DT_PEDIDO DATA
+  FROM PED_RX P, ATENDIME ATE, PACIENTE PA, itped_rx IT, EXA_RX
+ WHERE PA.CD_PACIENTE = ATE.CD_PACIENTE
+   AND P.CD_PED_RX = IT.CD_PED_RX
+   AND IT.cd_exa_rx = exa_rx.cd_exa_rx
+   AND P.CD_ATENDIMENTO = ATE.CD_ATENDIMENTO
+   and it.sn_realizado = 'S'
+   AND P.CD_SET_EXA IN (8, 5)
+   AND ATE.TP_ATENDIMENTO = 'E'
+
+   AND P.DT_PEDIDO between $P{Data_Inicial} and $P{Data_Final}
+   ORDER BY P.DT_PEDIDO, PA.NM_PACIENTE
+   
+  ]]>
+	</queryString>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="DS_EXA_RX" class="java.lang.String"/>
+	<field name="NR_FONE" class="java.lang.String"/>
+	<field name="NR_DDD_FONE" class="java.math.BigDecimal"/>
+	<field name="NR_DDD_CELULAR" class="java.math.BigDecimal"/>
+	<field name="NR_CELULAR" class="java.lang.String"/>
+	<field name="DATA" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="960" height="18" forecolor="#003333" uuid="34bea984-3ca8-481d-9122-50ef64f5e3fc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HOSPITAL METROPOLITANO DE URGÊNCIA E EMERGÊNCIA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="79" y="44" width="100" height="20" uuid="b1b560db-3e5e-4f01-b02d-9299d4e7248f"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{Data_Inicial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="79" y="64" width="100" height="20" uuid="afc1acac-5b27-4ad2-8612-d644cd8a15b1"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{Data_Final}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="4" y="44" width="69" height="20" forecolor="#CC0000" uuid="152ce507-f57b-4e79-a2b0-a5ae9babf7c0"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Inicial:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4" y="64" width="69" height="20" forecolor="#CC0000" uuid="e3585864-0987-4bd1-9e9a-f258a8645298"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Final:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="18" width="960" height="16" forecolor="#003333" uuid="1bd7ca0a-7e02-4402-bbeb-03219d409595"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO SADT EXTERNO NO PERÍODO ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="418" height="20" forecolor="#006633" uuid="8a23bdda-c3d8-4f5d-8699-7cd0ddd288f0"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="624" y="2" width="250" height="20" forecolor="#006633" uuid="68933eee-f342-4fb0-a78f-cd2d55bbff85"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Exame]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="2" width="103" height="20" forecolor="#006633" uuid="8933da47-5d2c-4513-9167-d9f103335bfb"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Telefone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="874" y="2" width="86" height="20" forecolor="#006633" uuid="73c8921f-e819-449a-a9cb-20aac938cca7"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Data Pedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="521" y="2" width="103" height="20" forecolor="#006633" uuid="0bc96e34-18ad-4850-8188-50a252d8011e"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="1" width="418" height="20" uuid="131d08bc-58e5-4261-bac4-d552a986f059"/>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="418" y="1" width="103" height="20" uuid="41fd7f91-bb85-4476-b966-ea3544237479"/>
+				<textFieldExpression><![CDATA[$F{NR_FONE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="624" y="1" width="250" height="20" uuid="0e8e46c9-f46b-4cf7-adbb-e902c683c98e"/>
+				<textFieldExpression><![CDATA[$F{DS_EXA_RX}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="874" y="0" width="86" height="20" uuid="716b3cf6-e7e0-436e-9638-4065784f782b"/>
+				<textFieldExpression><![CDATA[$F{DATA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="521" y="1" width="103" height="20" uuid="5fc4cb1a-58a1-42f7-b01e-a69528a5de9a"/>
+				<textFieldExpression><![CDATA[$F{NR_CELULAR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

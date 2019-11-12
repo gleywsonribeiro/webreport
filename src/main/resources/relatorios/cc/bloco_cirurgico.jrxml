@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bloco_cirurgico" pageWidth="3080" pageHeight="595" orientation="Landscape" columnWidth="3040" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e08daa31-637f-4ef9-aca4-56eee0ed53a8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="2059"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicio" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_fim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="centro_cir" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select Dt_Realizacao,
+       aviso,
+      -- Tp_Carater_Internacao,
+       --ds_carater_internacao,
+       Cd_Atendimento,
+       Tp_Atendimento,
+       nm_paciente,
+       cd_cirurgia,
+       ds_cirurgia,
+       ESPECIALIDADE,
+       nm_prestador,
+       DS_ATI_MED,
+       ds_tip_anest,
+       TP_NATUREZA,
+       TP_CIRURGIA,
+       TIPO_CIURGIA,
+       dt_entrada_sala,
+       dt_saida_sal_cir,
+       DT_INICIO_ANESTESIA,
+       DT_FIM_ANESTESIA,
+       hora_liberacao_sala,
+       DT_INICIO_CIRURGIA,
+       DT_FIM_CIRURGIA,
+       ds_sal_cir,
+
+
+
+       horas || ':' || minutos || ':' || segundos as tempo
+  from (select cirurgia.ds_cirurgia,1 virtual,
+               atendime.Cd_Atendimento ,
+               atendime.Tp_Atendimento,
+               -- dbamv . f_verif_prestador(AVISO_CIRURGIA . cd_aviso_cirurgia, cirurgia . cd_cirurgia) cd_cirurgiao,
+               -- dbamv . f_verif_prestador_anest(AVISO_CIRURGIA . cd_aviso_cirurgia, cirurgia . cd_cirurgia) cd_anestesista,
+               TO_CHAR(AVISO_CIRURGIA. DT_INICIO_CIRURGIA, 'HH24:MI') DT_INICIO_CIRURGIA,
+               TO_CHAR(AVISO_CIRURGIA.DT_FIM_CIRURGIA, 'HH24:MI') DT_FIM_CIRURGIA,
+               TO_CHAR(AVISO_CIRURGIA.DT_INICIO_ANESTESIA, 'HH24:MI') DT_INICIO_ANESTESIA,
+               TO_CHAR(AVISO_CIRURGIA. DT_FIM_ANESTESIA, 'HH24:MI') DT_FIM_ANESTESIA,
+               NVL(p. NM_PRESTADOR, 'NAO INFORMADO') NM_PRESTADOR,
+               NVL(ATI_MED . DS_ATI_MED, 'NAO INFORMADO') DS_ATI_MED,
+               tip_anest . ds_tip_anest ds_tip_anest,
+               aviso_cirurgia.cd_aviso_cirurgia aviso,
+               -- ANESTESISTA.NM_PRESTADOR ANESTESISTA,
+               ESP.DS_ESPECIALID ESPECIALIDADE,
+               DECODE(CIRURGIA.TP_CIRURGIA,'G','GRANDE','P','PEQUENA','M','MEDIA')TP_CIRURGIA,
+               --t.ds_carater_internacao,
+               CIRURGIA.TP_CLASSIF_PSIH --  <<-- PDA 138953
+              ,
+               Decode(CIRURGIA_AVISO.tp_natureza,
+                      'L',
+                      'LIMPA',
+                      'C',
+                      'CONTAMINADA',
+                      'I',
+                      'INFECTADA',
+                      'POTENCIALMENTE CONTAMINADA') TP_NATUREZA,
+                      DECODE(AVISO_CIRURGIA.TP_CIRURGIAS,'E','ELETIVA','M','EMERGÊNCIA','U','URGÊNCIA')TIPO_CIURGIA,
+               paciente.cd_paciente,
+               atendime.Tp_Carater_Internacao,
+               paciente.nm_paciente,
+               cirurgia.cd_cirurgia,
+               cen_cir.cd_cen_cir,
+               cen_cir.ds_cen_cir,
+               to_char(aviso_cirurgia.dt_realizacao, 'mm/yyyy') mes_cirurgia,
+               to_char(aviso_cirurgia.dt_realizacao, 'dd/mm/yyyy') dt_realizacao,
+               sal_cir.ds_sal_cir,
+               TO_CHAR(aviso_cirurgia.dt_realizacao, 'HH24:MI') dt_entrada_sala,
+
+               TO_CHAR(aviso_cirurgia.dt_saida_sal_cir, 'HH24:MI') dt_saida_sal_cir,
+               TO_CHAR(aviso_cirurgia.dt_fim_limpeza, 'HH24:MI') hora_liberacao_sala,
+               lpad(trunc(abs(aviso_cirurgia.dt_fim_limpeza -
+                              aviso_cirurgia.dt_realizacao) * 24),
+                    2,
+                    '0') horas,
+               lpad(trunc((mod(trunc(abs(aviso_cirurgia.dt_fim_limpeza -
+                                         aviso_cirurgia.dt_realizacao) * 24 * 60),
+                               60))),
+                    2,
+                    '0') minutos,
+               lpad(trunc((mod(round(abs(aviso_cirurgia.dt_fim_limpeza -
+                                         aviso_cirurgia.dt_realizacao) * 24 * 60 * 60),
+                               60))),
+                    2,
+                    '0') segundos
+          from dbamv.cirurgia_aviso,
+               dbamv.aviso_cirurgia,
+               prestador p,
+               ATI_MED,
+               tip_anest,
+               ESPECIALID ESP,
+               dbamv.cirurgia,
+               dbamv.cen_cir,
+               dbamv.paciente,
+               dbamv.atendime,
+               dbamv.sal_cir,
+
+
+               (SELECT P_A.CD_PRESTADOR,
+                       P_A.NM_PRESTADOR,
+                       A_M.CD_ATI_MED,
+                       A_M.DS_ATI_MED,
+                       P_A.CD_CIRURGIA_AVISO,
+                       P_A.CD_AVISO_CIRURGIA
+                  FROM DBAMV.PRESTADOR_AVISO P_A, DBAMV.ATI_MED A_M
+                 WHERE A_M.CD_ATI_MED = P_A.CD_ATI_MED
+                   ) PRESTADOR_AVISO
+
+         where cirurgia_aviso.cd_aviso_cirurgia =
+               aviso_cirurgia.cd_aviso_cirurgia
+           and cirurgia_aviso.cd_cirurgia = cirurgia.cd_cirurgia
+           and aviso_cirurgia.cd_cen_cir = cen_cir.cd_cen_cir
+           and aviso_cirurgia.cd_tip_anest = tip_anest.cd_tip_anest(+)
+           and atendime.cd_atendimento = aviso_cirurgia.cd_atendimento
+           and atendime.cd_paciente = paciente.cd_paciente
+           and p.cd_prestador = PRESTADOR_AVISO.cd_prestador
+           and paciente.cd_paciente = aviso_cirurgia.cd_paciente
+           and sal_cir.cd_cen_cir = cen_cir.cd_cen_cir
+           AND PRESTADOR_AVISO . CD_ATI_MED = ATI_MED .
+         CD_ATI_MED(+)
+           AND CIRURGIA_AVISO . CD_CIRURGIA_AVISO = PRESTADOR_AVISO .
+         CD_CIRURGIA_AVISO(+)
+           and sal_cir.cd_sal_cir = aviso_cirurgia.cd_sal_cir
+           AND ESP.CD_ESPECIALID(+) =  cirurgia_aviso.CD_ESPECIALID
+              -- AND AVISO_CIRURGIA.CD_AVISO_CIRURGIA = ANESTESISTA.CD_AVISO_CIRURGIA (+)
+         --  and t.cd_carater_internacao(+) = atendime.cd_carater_atendimento
+           and aviso_cirurgia.tp_situacao = 'R'
+           --    AND aviso_cirurgia.cd_aviso_cirurgia = 50073
+              --and (ATI_MED . DS_ATI_MED like 'CIRURGIAO' OR ATI_MED . DS_ATI_MED like 'ANESTESISTA')
+          AND to_char(aviso_cirurgia.Dt_Realizacao,'dd/mm/yyyy') BETWEEN  $P{data_inicio} AND
+            $P{data_fim}
+           and cen_cir.cd_cen_cir = $P{centro_cir}
+        -- and atendime.cd_atendimento = 246287
+         order by  dt_realizacao,
+                  nm_paciente
+)]]>
+	</queryString>
+	<field name="DT_REALIZACAO" class="java.lang.String"/>
+	<field name="AVISO" class="java.math.BigDecimal"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="TP_ATENDIMENTO" class="java.lang.String"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="CD_CIRURGIA" class="java.math.BigDecimal"/>
+	<field name="DS_CIRURGIA" class="java.lang.String"/>
+	<field name="ESPECIALIDADE" class="java.lang.String"/>
+	<field name="NM_PRESTADOR" class="java.lang.String"/>
+	<field name="DS_ATI_MED" class="java.lang.String"/>
+	<field name="DS_TIP_ANEST" class="java.lang.String"/>
+	<field name="TP_NATUREZA" class="java.lang.String"/>
+	<field name="TP_CIRURGIA" class="java.lang.String"/>
+	<field name="TIPO_CIURGIA" class="java.lang.String"/>
+	<field name="DT_ENTRADA_SALA" class="java.lang.String"/>
+	<field name="DT_SAIDA_SAL_CIR" class="java.lang.String"/>
+	<field name="DT_INICIO_ANESTESIA" class="java.lang.String"/>
+	<field name="DT_FIM_ANESTESIA" class="java.lang.String"/>
+	<field name="HORA_LIBERACAO_SALA" class="java.lang.String"/>
+	<field name="DT_INICIO_CIRURGIA" class="java.lang.String"/>
+	<field name="DT_FIM_CIRURGIA" class="java.lang.String"/>
+	<field name="DS_SAL_CIR" class="java.lang.String"/>
+	<field name="TEMPO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="83" height="20" uuid="90ef61fa-b240-430a-97b6-f802a9452d0b"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_REALIZ.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="3" width="80" height="20" uuid="a6f8bff4-012b-444d-87df-6aa2cb910c91"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVISO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="3" width="80" height="20" uuid="d5fce735-44a1-4320-b7fd-5dc0e2f969b5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TP_ATEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="3" width="334" height="20" uuid="9f264763-4d9d-43c9-9ff3-2ee3b437c0a4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NM_PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1869" y="3" width="122" height="20" uuid="597af357-ea62-42a5-b278-26e62715b968"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TP_NATUREZA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1991" y="3" width="121" height="20" uuid="2eff2c5e-1550-478d-85cb-fbf4a5dae5d2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TP_CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2112" y="3" width="118" height="20" uuid="49db89aa-fb34-48d3-8cc5-078faefa7940"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO_CIURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2230" y="3" width="81" height="20" uuid="33fb9130-c3ee-475f-b956-70c3aed9f411"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_ENT_SALA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2311" y="3" width="94" height="20" uuid="046c03a9-0ab1-4d6b-a719-a2ab05ca8f63"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_SAI_SAL_CIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2405" y="3" width="94" height="20" uuid="f1587f08-cfb4-4442-8ab9-7c1621fe2778"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_INI_ANEST.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="3" width="80" height="20" uuid="72c725dd-5ee5-4d85-8912-e2a2318686b7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CD_ATEND.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="657" y="3" width="83" height="20" uuid="a8344699-2e32-4630-a2e9-9cfdf7aba114"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CD_CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="740" y="3" width="327" height="20" uuid="df549583-7260-4a4f-9426-2545d0a82b91"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DS_CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1067" y="3" width="202" height="20" uuid="7a5cc26d-7de4-47b8-955d-68eea640d4e9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESPECIALIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1269" y="3" width="311" height="20" uuid="c35a4ec9-b604-4d15-b1fc-6b897e2bb797"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NM_PRESTADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1580" y="3" width="100" height="20" uuid="12596287-a697-404d-9d70-4f5bffad322e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DS_ATI_MED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1680" y="3" width="189" height="20" uuid="d09caf0b-cf12-47ab-b13e-e90919c97bc2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DS_TIP_ANEST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2595" y="3" width="101" height="20" uuid="a2ee316c-51ba-4734-93e6-a7aa5e76a4f8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA_LIB_SALA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2696" y="3" width="100" height="20" uuid="49f86ab7-e961-478f-9343-5b9f998cd6c6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_INI_CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2901" y="3" width="71" height="20" uuid="c80a5fb1-6646-44c7-87c8-2e98e6cb70df"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DS_SAL_CIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2972" y="3" width="68" height="20" uuid="6ee1a03c-9555-412d-b630-fe1aa8681244"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TEMPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2499" y="3" width="96" height="20" uuid="1daa4116-767a-475e-b687-f5233695d057"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_FIM_ANEST.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2796" y="3" width="105" height="20" uuid="87728ba6-5c66-4be3-a6da-cf8c47d44d4a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_FIM_CIRURGIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="83" y="0" width="80" height="20" uuid="6b20a1b5-fdc9-450c-a284-d65833c5f760"/>
+				<textFieldExpression><![CDATA[$F{AVISO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="80" height="20" uuid="892d4962-4076-466d-a00e-ebc4fee17c2b"/>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="243" y="0" width="80" height="20" uuid="2961865f-1c08-42a3-9088-02a0e7b1e101"/>
+				<textFieldExpression><![CDATA[$F{TP_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="0" width="334" height="20" uuid="c618a921-8632-40cb-9c00-cd1847efd29d"/>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="80" height="20" uuid="3aebb605-047d-44cc-b2fe-bd216815fb48"/>
+				<textFieldExpression><![CDATA[$F{DT_REALIZACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="740" y="0" width="327" height="20" uuid="7adff907-2d43-4caa-ae0a-3e10392bd6da"/>
+				<textFieldExpression><![CDATA[$F{DS_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1269" y="0" width="311" height="20" uuid="277acc68-0fec-4145-a444-8bfa0afa95b7"/>
+				<textFieldExpression><![CDATA[$F{NM_PRESTADOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1580" y="0" width="100" height="20" uuid="6b173984-6659-40c9-b334-8c3fcece9ca0"/>
+				<textFieldExpression><![CDATA[$F{DS_ATI_MED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="657" y="0" width="83" height="20" uuid="dd420d47-08f9-4328-9a8b-f1f4622836d7"/>
+				<textFieldExpression><![CDATA[$F{CD_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2595" y="0" width="101" height="20" uuid="6ea1569b-df04-4428-8d5f-00a4d5365f9b"/>
+				<textFieldExpression><![CDATA[$F{HORA_LIBERACAO_SALA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2696" y="0" width="100" height="20" uuid="0ac7ee57-d55e-4c21-8b3b-81f1e0c2b65b"/>
+				<textFieldExpression><![CDATA[$F{DT_INICIO_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2796" y="0" width="105" height="20" uuid="72460fcf-cf48-4361-a432-0a51ab8513f1"/>
+				<textFieldExpression><![CDATA[$F{DT_FIM_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2972" y="0" width="68" height="20" uuid="83c4c9f8-bb1c-481c-a8e0-079c06978f25"/>
+				<textFieldExpression><![CDATA[$F{TEMPO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1869" y="0" width="122" height="20" uuid="bdad4308-244d-4e65-b3f0-3c089f8299bc"/>
+				<textFieldExpression><![CDATA[$F{TP_NATUREZA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1991" y="0" width="121" height="20" uuid="aceef7d3-bbfc-4962-b7b5-d2ccfdd314ab"/>
+				<textFieldExpression><![CDATA[$F{TP_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2112" y="0" width="118" height="20" uuid="65e0f908-ebb0-4687-b67f-b2e4501edfca"/>
+				<textFieldExpression><![CDATA[$F{TIPO_CIURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2230" y="0" width="81" height="20" uuid="eed40bc7-3e65-4a3e-95f5-b09868d70000"/>
+				<textFieldExpression><![CDATA[$F{DT_ENTRADA_SALA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2311" y="0" width="94" height="20" uuid="b6437229-44dc-4d90-b490-5ded0b3a2d94"/>
+				<textFieldExpression><![CDATA[$F{DT_SAIDA_SAL_CIR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2405" y="0" width="94" height="20" uuid="57f92ded-61f8-4597-bae5-b6cf5eca640b"/>
+				<textFieldExpression><![CDATA[$F{DT_INICIO_ANESTESIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1067" y="0" width="202" height="20" uuid="ee6ea0f4-812f-4da9-b2a0-c9c19c28d3a9"/>
+				<textFieldExpression><![CDATA[$F{ESPECIALIDADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2499" y="0" width="96" height="20" uuid="fae729af-ece4-4c8d-83a3-28efff65be3e"/>
+				<textFieldExpression><![CDATA[$F{DT_FIM_ANESTESIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1680" y="0" width="189" height="20" uuid="2988a22a-27ee-4c45-a58a-c47168d23e0f"/>
+				<textFieldExpression><![CDATA[$F{DS_TIP_ANEST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2901" y="0" width="71" height="20" uuid="1fc0d989-31b8-4ad5-a6ce-6e261d30aa5a"/>
+				<textFieldExpression><![CDATA[$F{DS_SAL_CIR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

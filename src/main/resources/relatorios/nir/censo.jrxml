@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="senso_setor" pageWidth="1900" pageHeight="842" columnWidth="1860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="8cef2db9-39e7-44ff-860e-a7c1efe678b3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="713"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select initcap(calculo.tp_ocupacao) status,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'O' THEN
+          '1'
+       END AS OCUPADOS,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'V' THEN
+          '1'
+       END AS VAGO,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'L' THEN
+          '1'
+       END AS LIMPEZA,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'M' THEN
+          '1'
+       END AS MANUTENCAO,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'I' THEN
+          '1'
+       END AS INFECCAO,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'R' THEN
+          '1'
+       END AS RESERVA,
+       CASE
+         WHEN CALCULO.TP_OCUPACAO = 'A' THEN
+          '1'
+       END AS ACOMPANHAMTE,
+       calculo.ds_enfermaria,
+       calculo.ds_resumo,
+       calculo.sn_extra,
+       CASE
+         WHEN calculo.sn_extra = 'S' THEN
+          '1'
+         WHEN calculo.sn_extra = 'N' THEN
+          '0'
+       END AS EXTRA,
+       calculo.cd_atendimento,
+       initcap(calculo.nm_paciente) paciente,
+       initcap(calculo.cd_paciente) cod_paciente,
+       initcap(calculo.nm_prestador) medico,
+       calculo.dt_nascimento,
+       calculo.data_atual,
+       to_char(calculo.hr_atendimento, 'dd/mm/yyyy hh24:mi') data_atendimento,
+       -- calculo em horas
+       -- round(((tempo) * 86400 / 3600)) Horas_urgencia,
+       -- calculo das horas menos os dias
+       --   floor(mod((((tempo) * 86400 / 3600)), 24)) Horas_urgencia,
+       -- calculo em dias
+       --    substr(to_char((((tempo) * 86400 / 3600) / 24) || ' Dia(s)'), 1, 1) Dias_urgencia,
+       -- tempo_total
+       substr(to_char((((tempo) * 86400 / 3600) / 24) || ' Dia(s)'), 1, 2) ||
+       ' Dia(s) ' || to_char(floor(mod((((tempo) * 86400 / 3600)), 24))) ||
+       ' Hora(s)' tempo_total,
+       calculo.cd_unid_int codigo,
+       calculo.ds_unid_int unidade,
+       -- initcap(nvl(calculo.ds_leito,'Sem Leito Associado')) leito,
+       initcap(calculo.ds_servico) servico
+  from (select atendime.cd_atendimento,
+               paciente.nm_paciente,
+               paciente.cd_paciente,
+               paciente.dt_nascimento,
+               prestador.nm_prestador,
+               servico.ds_servico,
+               unid_int.ds_unid_int,
+               unid_int.cd_unid_int,
+               Leito.cd_leito,
+               leito.ds_enfermaria,
+               leito.sn_extra,
+               leito.ds_resumo,
+               LEITO.TP_OCUPACAO,
+               sysdate data_atual,
+               to_date(to_char(dt_atendimento, 'yyyymmdd') ||
+                       to_char(hr_atendimento, 'hh24mi'),
+                       'yyyymmddhh24mi') hr_atendimento,
+               sysdate - to_date(to_char(dt_atendimento, 'yyyymmdd') ||
+                                 to_char(hr_atendimento, 'hh24mi'),
+                                 'yyyymmddhh24mi') tempo
+          from dbamv.atendime,
+               dbamv.paciente,
+               dbamv.servico,
+               dbamv.unid_int,
+               dbamv.leito,
+               dbamv.prestador,
+               dbamv.setor
+         where atendime.cd_leito(+) = leito.cd_leito
+           and atendime.cd_servico = dbamv.servico.cd_servico
+           and atendime.cd_prestador = prestador.cd_prestador(+)
+           and atendime.cd_paciente = paciente.cd_paciente
+           and atendime.cd_servico = servico.cd_servico
+           and leito.cd_unid_int = unid_int.cd_unid_int
+           and setor.cd_setor = unid_int.cd_setor
+           --and unid_int.cd_unid_int
+           AND UNID_INT.SN_ATIVO = 'S'
+           AND LEITO.TP_OCUPACAO = 'O'
+           AND nvl(LEITO.TP_SITUACAO, 'NULO') = 'A'
+           and atendime.dt_alta is null) calculo]]>
+	</queryString>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="OCUPADOS" class="java.lang.String"/>
+	<field name="VAGO" class="java.lang.String"/>
+	<field name="LIMPEZA" class="java.lang.String"/>
+	<field name="MANUTENCAO" class="java.lang.String"/>
+	<field name="INFECCAO" class="java.lang.String"/>
+	<field name="RESERVA" class="java.lang.String"/>
+	<field name="ACOMPANHAMTE" class="java.lang.String"/>
+	<field name="DS_ENFERMARIA" class="java.lang.String"/>
+	<field name="DS_RESUMO" class="java.lang.String"/>
+	<field name="SN_EXTRA" class="java.lang.String"/>
+	<field name="EXTRA" class="java.lang.String"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="PACIENTE" class="java.lang.String"/>
+	<field name="COD_PACIENTE" class="java.lang.String"/>
+	<field name="MEDICO" class="java.lang.String"/>
+	<field name="DT_NASCIMENTO" class="java.sql.Timestamp"/>
+	<field name="DATA_ATUAL" class="java.sql.Timestamp"/>
+	<field name="DATA_ATENDIMENTO" class="java.lang.String"/>
+	<field name="TEMPO_TOTAL" class="java.lang.String"/>
+	<field name="CODIGO" class="java.math.BigDecimal"/>
+	<field name="UNIDADE" class="java.lang.String"/>
+	<field name="SERVICO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="49" splitType="Stretch">
+			<staticText>
+				<reportElement x="799" y="13" width="274" height="36" forecolor="#006600" uuid="0afe3da6-9fed-4843-9ddd-19a85b5ef2d3"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CENSO HOSPITALAR]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="0" width="137" height="20" backcolor="#999999" uuid="a344171a-d0d6-4f3f-b859-5c3e5cd61eea"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="387" y="0" width="127" height="20" backcolor="#999999" uuid="8958a585-a6ad-4b2c-9d13-53a8ee6b5b77"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="898" y="0" width="158" height="20" backcolor="#999999" uuid="c2e09c1f-c94b-44c1-b5bb-5cfc02772c99"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Admissão]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1056" y="0" width="105" height="20" backcolor="#999999" uuid="b9d2aa47-a636-4f74-81a3-35fe68cf7488"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trat. Inter. Entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1161" y="0" width="81" height="20" backcolor="#999999" uuid="025c2956-d311-4454-8057-29e99b6fdbc0"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Altas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1242" y="0" width="86" height="20" backcolor="#999999" uuid="5c0503f2-ced0-46c4-b275-2d6f8e006072"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Motivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1328" y="0" width="99" height="20" backcolor="#999999" uuid="0d79a1ed-2c41-47c7-9e3a-d1cb353a2233"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Trat. Ext.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1427" y="0" width="99" height="20" backcolor="#999999" uuid="b74b02d2-0192-4eab-aeeb-3bd0814320a3"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Trat. Inter. Saída]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1526" y="0" width="67" height="20" backcolor="#999999" uuid="ee2d144c-9962-42d8-b95b-1691aa04c081"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Óbitos 24-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1593" y="0" width="63" height="20" backcolor="#999999" uuid="0ed0ffc2-cb58-4540-9eca-8d2d14f690dd"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Óbitos 24+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1656" y="0" width="99" height="20" backcolor="#999999" uuid="88d24591-5654-4427-b363-e9f0f7430e24"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Especialidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1755" y="0" width="105" height="20" backcolor="#999999" uuid="0bdf83c5-81cd-4acf-bc38-b1fbdd240b99"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Diagnóstico]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="76" height="20" backcolor="#999999" uuid="c2b81fa8-3e1b-4d3b-ab76-bcebc3b2515e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="77" y="0" width="173" height="20" backcolor="#999999" uuid="912ee882-6305-4b43-b4b5-74a82161ed47"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidade de Internação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="629" y="0" width="269" height="20" backcolor="#999999" uuid="d7481da6-11c2-41b8-921b-f787b2a3b0eb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="514" y="0" width="115" height="20" backcolor="#999999" uuid="5abe66cf-b0b0-4456-9c1c-fae5e9ae7d4f"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="250" y="1" width="137" height="20" uuid="089f96b8-da32-4605-81a0-c33e5783f6ef"/>
+				<textFieldExpression><![CDATA[$F{DS_RESUMO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="1" width="127" height="20" uuid="740f91bc-ce4e-4e1d-b828-bd0fbc39d71e"/>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="515" y="1" width="114" height="20" uuid="3d4628cc-1b8c-412b-9aff-7ea622efc286"/>
+				<textFieldExpression><![CDATA[$F{COD_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="629" y="1" width="269" height="20" uuid="d2054dd3-e726-4017-941d-69b38e514c6c"/>
+				<textFieldExpression><![CDATA[$F{PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="898" y="1" width="159" height="20" uuid="da232c8b-6858-4e90-901c-da5130dda7b1"/>
+				<textFieldExpression><![CDATA[$F{DATA_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="1" width="76" height="20" uuid="bb605ec5-af3d-4d8f-b025-f8c9cb70c312"/>
+				<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="1" width="173" height="20" uuid="866afb5b-7bca-4c02-b33e-0226e67270f5"/>
+				<textFieldExpression><![CDATA[$F{UNIDADE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

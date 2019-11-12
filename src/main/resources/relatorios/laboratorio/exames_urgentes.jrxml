@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exames de urgencia" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e0a47126-11b5-40cc-8e20-217e4eb17d6f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select n2.dt_pre_med,
+       n2.dh_pre_med,
+       n2.dt_assinado,
+       n2.cd_ped_lab,
+       n2.nm_exa_lab,
+       hora || ':' || lpad(minuto, 2, 0) tempo
+  from (select n1.*,
+               (n1.dt_assinado - n1.dh_pre_med) diff,
+               TRUNC(((86400 * (n1.dt_assinado - n1.dh_pre_med)) / 60) / 60) -
+               24 *
+               (TRUNC((((86400 * (n1.dt_assinado - n1.dh_pre_med)) / 60) / 60) / 24)) +
+               trunc(n1.dt_assinado - n1.dh_pre_med) * 24 hora,
+               TRUNC(TRUNC((86400 * (n1.dt_assinado - n1.dh_pre_med) / 60) -
+                           60 *
+                           (TRUNC(((86400 * (n1.dt_assinado - n1.dh_pre_med)) / 60) / 60)))) minuto
+          from (select ped.cd_ped_lab,
+                       pre.dt_pre_med,
+                       pre.hr_pre_med,
+                       to_date(to_char(pre.dt_pre_med, 'dd/mm/yyyy') ||
+                               to_char(pre.hr_pre_med, 'hh24:mi:ss'),
+                               'dd/mm/yyyy hh24:mi:ss') dh_pre_med,
+                       itp.cd_itpre_med,
+                       itp.sn_urgente,
+                       tip.ds_tip_presc,
+                       ipl.cd_itped_lab,
+                       exa.nm_exa_lab,
+                       ipl.dt_assinado
+                  from itped_lab ipl,
+                       ped_lab   ped,
+                       exa_lab   exa,
+                       itpre_med itp,
+                       tip_presc tip,
+                       pre_med   pre
+                 where ipl.cd_ped_lab = ped.cd_ped_lab
+                   and exa.cd_exa_lab = ipl.cd_exa_lab
+                   and itp.cd_pre_med = ped.cd_pre_med
+                   and itp.sn_urgente = 'S'
+                   and ipl.dt_assinado is not null
+                   and tip.cd_tip_presc = itp.cd_tip_presc
+                   and exa.cd_exa_lab = tip.cd_exa_lab
+                   and exa.nm_exa_lab not like '%CULTURA%'
+                   and pre.cd_pre_med = itp.cd_pre_med) n1) n2
+ where n2.dt_pre_med between $P{data_inicial} and $P{data_final}
+ order by dt_pre_med]]>
+	</queryString>
+	<field name="DT_PRE_MED" class="java.sql.Timestamp"/>
+	<field name="DH_PRE_MED" class="java.sql.Timestamp"/>
+	<field name="DT_ASSINADO" class="java.sql.Timestamp"/>
+	<field name="CD_PED_LAB" class="java.math.BigDecimal"/>
+	<field name="NM_EXA_LAB" class="java.lang.String"/>
+	<field name="TEMPO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="bddd39f9-d46f-4a9f-a60b-1604f7db0bff"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DT_PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="8eb57142-bf59-483d-9892-b661a3003d93"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LIBERAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="e10deaad-3920-4557-90b3-a5aa664176f6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="402" height="20" uuid="e5d1fc6d-00d6-4c37-82e1-2d3dd962ab74"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="702" y="0" width="100" height="20" uuid="18aa5dc0-3179-4b16-9861-44063bb7d5e8"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TEMPO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="4e69db7d-b128-4fcd-8bd5-51753cb6a633"/>
+				<textFieldExpression><![CDATA[$F{DH_PRE_MED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="c195d3e8-4727-4acd-aa51-278defe3e1d0"/>
+				<textFieldExpression><![CDATA[$F{DT_ASSINADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="bb776759-5355-4b7b-8301-b37b1643a284"/>
+				<textFieldExpression><![CDATA[$F{CD_PED_LAB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="402" height="20" uuid="73911dd1-b4d5-452c-a041-8c205286c1ca"/>
+				<textFieldExpression><![CDATA[$F{NM_EXA_LAB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="702" y="0" width="100" height="20" uuid="30fd18e9-1b2c-4f98-8ff9-1627520425ea"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{TEMPO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

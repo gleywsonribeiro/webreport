@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="prescricoes_pos_14" pageWidth="900" pageHeight="595" orientation="Landscape" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="5c45c8bf-b924-4a71-976f-e4273d6412c4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dt_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ESPECIALIDADE, NM_PRESTADOR, NM_SETOR, COUNT(*) TOTAL
+  FROM (
+
+        SELECT PM.CD_PRE_MED,
+                PM.CD_ATENDIMENTO,
+                P.CD_PRESTADOR,
+                P.NM_PRESTADOR,
+                E.DS_ESPECIALID ESPECIALIDADE,
+                PM.CD_UNID_INT,
+                PM.DT_PRE_MED,
+                S.NM_SETOR,
+                TO_CHAR(PM.DH_IMPRESSAO, 'dd/mm/yyyy') CRIACAO,
+                TO_CHAR(PM.DH_IMPRESSAO, 'HH24:MM:SS') HORA
+          FROM PRE_MED PM, PRESTADOR P, SETOR S, ESPECIALID E, ESP_MED EM
+         WHERE TRUNC(PM.DH_IMPRESSAO) BETWEEN $P{dt_inicial} AND $P{dt_final}
+           AND P.CD_PRESTADOR = PM.CD_PRESTADOR
+           AND S.CD_SETOR = PM.CD_SETOR
+           --AND P.CD_PRESTADOR = 115
+           AND TO_CHAR(PM.DH_IMPRESSAO, 'HH24:MM:SS') > '14:00:00'
+           AND EM.CD_PRESTADOR = P.CD_PRESTADOR
+           AND EM.CD_ESPECIALID = E.CD_ESPECIALID
+           AND EM.SN_ESPECIAL_PRINCIPAL = 'S'
+           )
+ GROUP BY ESPECIALIDADE, NM_PRESTADOR, NM_SETOR
+ ORDER BY ESPECIALIDADE, NM_PRESTADOR, NM_SETOR, TOTAL DESC]]>
+	</queryString>
+	<field name="ESPECIALIDADE" class="java.lang.String"/>
+	<field name="NM_PRESTADOR" class="java.lang.String"/>
+	<field name="NM_SETOR" class="java.lang.String"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="299" y="31" width="205" height="48" forecolor="#006633" uuid="8ecfcac9-7cee-4c73-9c4e-d94454850117"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESCRIÇÕES PÓS 14:00H]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="194" y="0" width="336" height="20" forecolor="#006666" uuid="4c8d8918-06a9-44db-890c-f16d5e601936"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRESTADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="530" y="0" width="191" height="20" forecolor="#006666" uuid="27599936-306b-4698-82e2-a1f0fd155432"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SETOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="721" y="0" width="138" height="20" forecolor="#006666" uuid="c2a1039c-8b58-488a-8fd0-9789d7168e3f"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTD PRESCRIÇÕES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="194" height="20" forecolor="#006666" uuid="8c33728e-1512-4a10-b00d-bfb6af12c148"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESPECIALIDADE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="194" y="0" width="336" height="20" uuid="bb115681-fe9f-45e5-bb32-ee23f4277ab1"/>
+				<textFieldExpression><![CDATA[$F{NM_PRESTADOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="0" width="191" height="20" uuid="14e194a6-92f1-411f-80c4-5dbd647bfc8c"/>
+				<textFieldExpression><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="721" y="0" width="138" height="20" uuid="5abaebcb-4132-4226-ab23-b6acc897874d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="194" height="20" uuid="42c4aa10-763d-4ed7-b41c-a374d8fa2da8"/>
+				<textFieldExpression><![CDATA[$F{ESPECIALIDADE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

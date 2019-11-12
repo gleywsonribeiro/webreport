@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio de altas_ saida" pageWidth="3000" pageHeight="661" orientation="Landscape" columnWidth="2960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3c53b80f-a492-48c2-b6c6-3702b0b2612b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="129"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="date_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ATENDIME . CD_ATENDIMENTO,
+      PACIENTE . CD_PACIENTE,
+      PACIENTE . NM_PACIENTE,
+      paciente . tp_sexo,
+      DBAMV . PACK_INTERNAMENTO . RETORNA_IDADE(PACIENTE . DT_NASCIMENTO, SYSDATE) IDADE_PAC,
+                cidade . nm_cidade,
+                paciente . ds_endereco,
+                paciente . nm_bairro,
+                prestador . nm_prestador,
+                atendime.ds_atendimento,
+                ATENDIME . CD_CONVENIO,
+                CONVENIO . NM_CONVENIO,
+                ATENDIME . CD_CID,
+                cid.ds_cid as Descrição_Cid,
+                ATENDIME . DT_ATENDIMENTO,
+                LEITO . DS_RESUMO,
+                LEITO . DS_ENFERMARIA,
+                UNID_INT.Ds_Unid_Int,
+                TO_CHAR(ATENDIME . DT_ALTA,'DD/MM/YYYY')DT_ALTA,
+                MOT_ALT . CD_MOT_ALT,
+                MOT_ALT . DS_MOT_ALT as CONDUTA_DE_SAIDA,
+                (ATENDIME . DT_ALTA - ATENDIME . DT_ATENDIMENTO) Dias,
+                TO_CHAR(PACIENTE . DT_NASCIMENTO,'DD/MM/YYYY')DT_NASCIMENTO
+  FROM DBAMV . ATENDIME,
+       DBAMV . PACIENTE,
+       DBAMV . CONVENIO,
+       DBAMV . MOT_ALT,
+       DBAMV . CID_ATE,
+       DBAMV . LEITO,
+       DBAMV . UNID_INT,
+       dbamv . cidade,
+       dbamv . prestador,
+       dbamv . cid
+ WHERE ATENDIME . DT_ALTA between $P{date_inicial} and $P{date_final}
+AND ATENDIME.CD_PACIENTE = PACIENTE.CD_PACIENTE
+   AND ATENDIME.CD_CONVENIO = CONVENIO.CD_CONVENIO
+   AND ATENDIME.CD_MOT_ALT = MOT_ALT.CD_MOT_ALT(+)
+   and paciente.cd_cidade = cidade.cd_cidade
+   and atendime.cd_cid = cid.cd_cid
+   and prestador.cd_prestador = atendime.cd_prestador
+   AND ATENDIME.TP_ATENDIMENTO IN ('I')
+   AND ATENDIME.CD_ATENDIMENTO = CID_ATE.CD_ATENDIMENTO(+)
+   AND (CID_ATE.CD_CID =
+        (SELECT CID2.CD_CID
+           FROM DBAMV.CID_ATE CID2
+          WHERE CID2.CD_ATENDIMENTO = ATENDIME.CD_ATENDIMENTO
+            AND ROWNUM < 2) OR CID_ATE.CD_CID IS NULL)
+   AND ATENDIME.CD_LEITO = LEITO.CD_LEITO(+)
+   AND LEITO.CD_UNID_INT = UNID_INT.CD_UNID_INT(+)
+   AND ATENDIME . DT_ALTA IS NOT NULL
+   order by ATENDIME . DT_ALTA]]>
+	</queryString>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="CD_PACIENTE" class="java.math.BigDecimal"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="TP_SEXO" class="java.lang.String"/>
+	<field name="IDADE_PAC" class="java.lang.String"/>
+	<field name="NM_CIDADE" class="java.lang.String"/>
+	<field name="DS_ENDERECO" class="java.lang.String"/>
+	<field name="NM_BAIRRO" class="java.lang.String"/>
+	<field name="NM_PRESTADOR" class="java.lang.String"/>
+	<field name="DS_ATENDIMENTO" class="java.lang.String"/>
+	<field name="CD_CONVENIO" class="java.math.BigDecimal"/>
+	<field name="NM_CONVENIO" class="java.lang.String"/>
+	<field name="CD_CID" class="java.lang.String"/>
+	<field name="DESCRIÇÃO_CID" class="java.lang.String"/>
+	<field name="DT_ATENDIMENTO" class="java.sql.Timestamp"/>
+	<field name="DS_RESUMO" class="java.lang.String"/>
+	<field name="DS_ENFERMARIA" class="java.lang.String"/>
+	<field name="DS_UNID_INT" class="java.lang.String"/>
+	<field name="DT_ALTA" class="java.lang.String"/>
+	<field name="CD_MOT_ALT" class="java.math.BigDecimal"/>
+	<field name="CONDUTA_DE_SAIDA" class="java.lang.String"/>
+	<field name="DIAS" class="java.math.BigDecimal"/>
+	<field name="DT_NASCIMENTO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="2960" height="34" backcolor="#FFFF00" uuid="993b81b2-469e-4ff8-a4c1-b2a038268c0f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALTAS INTERNAÇÃO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="685a8aba-ffc5-43d8-a377-6f1564daca7d"/>
+				<text><![CDATA[CD_ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="5b6bea47-97a0-4e2c-93ec-6defd545e004"/>
+				<text><![CDATA[CD_PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="200" y="0" width="240" height="20" backcolor="#CCCCCC" uuid="ec823cf4-5b52-47d6-becf-13960441c962"/>
+				<text><![CDATA[NM_PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="440" y="0" width="75" height="20" backcolor="#CCCCCC" uuid="4c06843a-4ff0-42d9-83ce-f127da31ec94"/>
+				<text><![CDATA[TP_SEXO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="515" y="0" width="87" height="20" backcolor="#CCCCCC" uuid="cabb95e0-cd1c-4c35-a61f-592273e6b89b"/>
+				<text><![CDATA[IDADE_PAC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="602" y="0" width="94" height="20" backcolor="#CCCCCC" uuid="197ed31c-7799-465e-9b84-b3af0303b47f"/>
+				<text><![CDATA[NM_CIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="696" y="0" width="106" height="20" backcolor="#CCCCCC" uuid="b4dd5566-3cfd-4b1d-9b12-60668ca6742b"/>
+				<text><![CDATA[DS_ENDERECO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="802" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="7076f510-71d6-40ca-96ca-4422733a967f"/>
+				<text><![CDATA[NM_BAIRRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="902" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="b89d52c3-416f-44c2-a79d-c769d22a8f91"/>
+				<text><![CDATA[NM_PRESTADOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1002" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="4f977257-dd12-4c9e-9783-b7d3d8823cdf"/>
+				<text><![CDATA[CD_CONVENIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1102" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="9398b494-7a0b-4618-b8d0-e311a165e5ce"/>
+				<text><![CDATA[NM_CONVENIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1202" y="0" width="103" height="20" backcolor="#CCCCCC" uuid="3f01c94d-8048-472f-bc01-a6f1a229913d"/>
+				<text><![CDATA[CD_CID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1305" y="0" width="170" height="20" backcolor="#CCCCCC" uuid="ff4b98f3-f138-4744-9052-bb314c4c7090"/>
+				<text><![CDATA[DESCRIÇÃO_CID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1475" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="088513a8-04c8-4718-8505-a1265cbb785c"/>
+				<text><![CDATA[DT_ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1575" y="0" width="100" height="20" backcolor="#CCCCCC" uuid="89658ba8-9a7f-4424-9c53-0dd5ae998753"/>
+				<text><![CDATA[DS_RESUMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1675" y="0" width="101" height="20" backcolor="#CCCCCC" uuid="3ea334b7-0eeb-48b0-86ec-76b8220cb1d5"/>
+				<text><![CDATA[DS_ENFERMARIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2281" y="0" width="90" height="20" backcolor="#CCCCCC" uuid="e327737e-8583-4c9f-8ccb-7003f29c4c63"/>
+				<text><![CDATA[DIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2371" y="0" width="89" height="20" backcolor="#CCCCCC" uuid="64967334-9a0d-4a73-987c-e38cac470a3e"/>
+				<text><![CDATA[DT_NASCIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2046" y="0" width="80" height="20" backcolor="#CCCCCC" uuid="62d28fe2-e924-43f4-96ff-b8b786caab5c"/>
+				<text><![CDATA[DT_ALTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2126" y="0" width="155" height="20" backcolor="#CCCCCC" uuid="d63b1b52-de12-469e-a6f8-2ff5379456eb"/>
+				<text><![CDATA[CONDUTA_DE_SAIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1776" y="0" width="270" height="20" backcolor="#CCCCCC" uuid="e7a1e55c-927c-498c-a642-bcdfa5a6c89b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unidade de Internação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2460" y="0" width="500" height="20" backcolor="#CCCCCC" uuid="0f3b6f25-eb7c-446c-9f6b-363ed3bbd970"/>
+				<text><![CDATA[DS_ATENDIMENTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="21" uuid="11ea9cf3-70a4-4e6e-91cd-538a92f55012"/>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="21" uuid="e7226c3b-f0c0-4b99-b971-f9c3f0b9040c"/>
+				<textFieldExpression><![CDATA[$F{CD_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="240" height="21" uuid="18a473c7-9b1c-4435-b7f6-f5618fbca607"/>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="75" height="21" uuid="ab5aa8f3-82b4-4983-ae2a-2c5f2688f119"/>
+				<textFieldExpression><![CDATA[$F{TP_SEXO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="515" y="0" width="87" height="21" uuid="f57319dd-8b23-45d6-912b-10297436a6f0"/>
+				<textFieldExpression><![CDATA[$F{IDADE_PAC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="602" y="0" width="94" height="21" uuid="604503c5-31cc-469d-8b25-01a11bab9353"/>
+				<textFieldExpression><![CDATA[$F{NM_CIDADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="696" y="0" width="106" height="21" uuid="681d5e01-063a-4203-8678-271731d85716"/>
+				<textFieldExpression><![CDATA[$F{DS_ENDERECO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="802" y="0" width="100" height="21" uuid="3deec819-a3f7-4c41-be7c-88ffc5c92d19"/>
+				<textFieldExpression><![CDATA[$F{NM_BAIRRO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="902" y="0" width="100" height="21" uuid="0b90eb96-998e-4fa3-aaf6-36e477523491"/>
+				<textFieldExpression><![CDATA[$F{NM_PRESTADOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1002" y="0" width="100" height="21" uuid="a96cd61a-9ae6-4b1a-8a8b-a43326e141af"/>
+				<textFieldExpression><![CDATA[$F{CD_CONVENIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1102" y="0" width="100" height="21" uuid="47d75901-663a-46a6-82b8-40e9500d5f22"/>
+				<textFieldExpression><![CDATA[$F{NM_CONVENIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1202" y="0" width="103" height="21" uuid="af00ee71-7c54-44eb-9831-6fd296293ca3"/>
+				<textFieldExpression><![CDATA[$F{CD_CID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1305" y="0" width="170" height="21" uuid="b0d1da14-23bb-4c69-84eb-8c8a0370b160"/>
+				<textFieldExpression><![CDATA[$F{DESCRIÇÃO_CID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1475" y="0" width="100" height="21" uuid="7dec0b74-debc-45c3-9aaa-7a1d24c7ee6b"/>
+				<textFieldExpression><![CDATA[$F{DT_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1575" y="0" width="100" height="21" uuid="f2c78be6-c922-4237-9857-22ebcb9e8839"/>
+				<textFieldExpression><![CDATA[$F{DS_RESUMO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1675" y="0" width="100" height="21" uuid="18fcf75a-08d2-4d46-886f-e835d75c4da4"/>
+				<textFieldExpression><![CDATA[$F{DS_ENFERMARIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2281" y="0" width="90" height="21" uuid="cabfa867-5ad8-40d8-9ae5-54f96e9fe517"/>
+				<textFieldExpression><![CDATA[$F{DIAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2371" y="0" width="89" height="21" uuid="159d8a9c-24b0-40f0-b334-a04d87ab5b3d"/>
+				<textFieldExpression><![CDATA[$F{DT_NASCIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2046" y="0" width="80" height="21" uuid="9d28f659-1874-4747-abdf-5e3238a39778"/>
+				<textFieldExpression><![CDATA[$F{DT_ALTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2126" y="0" width="155" height="21" uuid="ba28f8ba-b6cd-4a9b-94af-a655031d6022"/>
+				<textFieldExpression><![CDATA[$F{CONDUTA_DE_SAIDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1775" y="0" width="271" height="21" uuid="e8ae72f9-c43d-4642-812f-ce7d97b33dd9"/>
+				<textFieldExpression><![CDATA[$F{DS_UNID_INT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2460" y="1" width="500" height="20" uuid="89f11fc5-2892-4129-8bde-2da6baa3d504"/>
+				<textFieldExpression><![CDATA[$F{DS_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

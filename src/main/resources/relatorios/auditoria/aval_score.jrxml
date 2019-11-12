@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="aval_score" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="77d64f21-f295-49fd-baa8-88b7f753f7db">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  a.*,
+       qtde_dia * total_leitos ocupacao
+FROM(
+SELECT
+       calculo.ds_unid_int unidade,
+       calculo.cd_unid_int  cod_unid,
+       calculo.ds_enfermaria,
+       calculo.ds_resumo,
+       COUNT(ds_resumo) COUNT,
+       to_date(TO_CHAR(calculo.dh_avaliacao,'DD/MM/YYYY'))DATA,
+       to_char(last_day(calculo.dh_avaliacao),'dd')qtde_dia,
+       CASE WHEN calculo.ds_unid_int = 'UTI PEDIATRICA' THEN '5'
+            WHEN calculo.ds_unid_int = 'CENTRO DE TRATAMENTO QUEIMADOS' THEN '20'
+            WHEN calculo.ds_unid_int = 'CLÍNICA CIRÚRGICA' THEN '20'
+            WHEN calculo.ds_unid_int = 'CLINICA MÉDICA-CIRÚRGICA' THEN '16'
+            WHEN calculo.ds_unid_int = 'CLÍNICA NEUROCIRURGIA' THEN '26'
+            WHEN calculo.ds_unid_int = 'CLINICA ORTOPEDICA I' THEN '26'
+            WHEN calculo.ds_unid_int = 'CLINICA ORTOPEDICA II' THEN '20'
+            WHEN calculo.ds_unid_int = 'CLINICA ORTOPEDICA III' THEN '26'
+            WHEN calculo.ds_unid_int = 'UTI ADULTO I' THEN '10'
+            WHEN calculo.ds_unid_int = 'UTI ADULTO II' THEN '10'
+            WHEN calculo.ds_unid_int = 'CLINICA PEDIATRICA' THEN '19'
+            END AS total_leitos,
+       CALCULO.VALOR,
+       calculo.cd_atendimento,
+       to_char(calculo.hr_atendimento, 'dd/mm/yyyy hh24:mi') data_atendimento
+
+
+  from (
+
+  select atendime.cd_atendimento,
+               paciente.nm_paciente,
+               paciente.cd_paciente,
+               aval.dh_avaliacao,
+               CASE WHEN aval.vl_resultado BETWEEN '13' AND '26' THEN 'A'
+                    WHEN aval.vl_resultado BETWEEN '27' AND '39' THEN 'B'
+                    WHEN aval.vl_resultado BETWEEN '40' AND '52' THEN 'C'
+                    WHEN aval.vl_resultado BETWEEN '53' AND '65' THEN 'D' END AS VALOR,
+               paciente.dt_nascimento,
+               prestador.nm_prestador,
+               servico.ds_servico,
+               unid_int.ds_unid_int,
+               unid_int.cd_unid_int,
+               Leito.cd_leito,
+               leito.ds_enfermaria,
+               leito.sn_extra,
+               leito.ds_resumo,
+               LEITO.TP_OCUPACAO,
+               sysdate data_atual,
+               to_date(to_char(dt_atendimento, 'yyyymmdd') ||
+                       to_char(hr_atendimento, 'hh24mi'),
+                       'yyyymmddhh24mi') hr_atendimento,
+               sysdate - to_date(to_char(dt_atendimento, 'yyyymmdd') ||
+                                 to_char(hr_atendimento, 'hh24mi'),
+                                 'yyyymmddhh24mi') tempo
+          from dbamv.atendime,
+               dbamv.paciente,
+               dbamv.servico,
+               dbamv.unid_int,
+               dbamv.leito,
+               dbamv.prestador,
+               dbamv.setor,
+               pagu_avaliacao aval
+         where atendime.cd_leito(+) = leito.cd_leito
+           and atendime.cd_servico = dbamv.servico.cd_servico
+           and atendime.cd_prestador = prestador.cd_prestador(+)
+           and atendime.cd_paciente = paciente.cd_paciente
+           and atendime.cd_servico = servico.cd_servico
+           and leito.cd_unid_int = unid_int.cd_unid_int
+           and setor.cd_setor = unid_int.cd_setor
+           AND aval.cd_atendimento(+) = atendime.cd_atendimento
+           AND UNID_INT.SN_ATIVO = 'S'
+           AND nvl(LEITO.TP_SITUACAO, 'NULO') = 'A'
+           and atendime.dt_alta is NULL
+           AND aval.cd_formula = 31
+
+          ) calculo
+         WHERE        to_date(TO_CHAR(calculo.dh_avaliacao,'DD/MM/YYYY')) BETWEEN $P{data_inicial} AND $P{data_final}
+
+GROUP BY calculo.ds_unid_int ,
+        calculo.cd_unid_int,
+       calculo.ds_enfermaria,
+        calculo.ds_resumo,
+        calculo.dh_avaliacao,
+        CALCULO.VALOR,
+       calculo.cd_atendimento,
+       calculo.cd_paciente,
+       calculo.nm_paciente,
+       calculo.hr_atendimento
+order by 1
+
+) a
+--GROUP BY cod_unid,unidade,qtde_dia * total_leitos]]>
+	</queryString>
+	<field name="UNIDADE" class="java.lang.String"/>
+	<field name="COD_UNID" class="java.math.BigDecimal"/>
+	<field name="DS_ENFERMARIA" class="java.lang.String"/>
+	<field name="DS_RESUMO" class="java.lang.String"/>
+	<field name="COUNT" class="java.math.BigDecimal"/>
+	<field name="DATA" class="java.sql.Timestamp"/>
+	<field name="QTDE_DIA" class="java.lang.String"/>
+	<field name="TOTAL_LEITOS" class="java.lang.String"/>
+	<field name="VALOR" class="java.lang.String"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="DATA_ATENDIMENTO" class="java.lang.String"/>
+	<field name="OCUPACAO" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="2" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="2" width="291" height="20" uuid="658b6b8d-8e79-43f4-a676-3013a3adaa1f"/>
+				<text><![CDATA[UNIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="2" width="165" height="20" uuid="edf97213-25e3-4847-ba3b-a6a6cbd42508"/>
+				<text><![CDATA[DS_RESUMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="2" width="100" height="20" uuid="9e0bd87d-e192-4e47-b4bb-f2c7bfba47e1"/>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="560" y="2" width="100" height="20" uuid="c60bf860-2244-4adf-9642-0a1bf383dd78"/>
+				<text><![CDATA[QTDE_DIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="2" width="100" height="20" uuid="43d0ae74-ddeb-4c5b-abee-138ac05ce14e"/>
+				<text><![CDATA[TOTAL_LEITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="760" y="2" width="100" height="20" uuid="48690d08-2e75-4cb2-926b-b36f533d593d"/>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="860" y="2" width="100" height="20" uuid="8171ad07-3d50-4132-a4e6-f35e884c73e0"/>
+				<text><![CDATA[OCUPACAO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="0" width="291" height="20" uuid="d44a83b2-7559-4045-9df3-7e5fead73ed4"/>
+				<textFieldExpression><![CDATA[$F{UNIDADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="0" width="165" height="20" uuid="2d48a297-c748-4214-b94f-ff8bd1497e59"/>
+				<textFieldExpression><![CDATA[$F{DS_RESUMO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="100" height="20" uuid="1ce3ec6a-087d-4496-a606-7b3a69967470"/>
+				<textFieldExpression><![CDATA[$F{DATA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="560" y="0" width="100" height="20" uuid="f24311d0-9915-4c04-a3cd-451400945ff5"/>
+				<textFieldExpression><![CDATA[$F{QTDE_DIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="0" width="100" height="20" uuid="538ee4db-61be-43e4-9cbf-fc09fda45fba"/>
+				<textFieldExpression><![CDATA[$F{TOTAL_LEITOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="760" y="0" width="100" height="20" uuid="1594f9f8-5865-4e31-b38a-19c4835a222a"/>
+				<textFieldExpression><![CDATA[$F{VALOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="860" y="0" width="100" height="20" uuid="421dccba-e6da-4294-afc8-8a21701c7565"/>
+				<textFieldExpression><![CDATA[$F{OCUPACAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="1" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

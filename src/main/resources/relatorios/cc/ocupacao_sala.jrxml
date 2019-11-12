@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ocupação qtde_turno_sala" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8b3fbcac-01a4-47b2-aef9-0a241a2f4c80">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DS_SAL_CIR, TURNO, SUM(MINUTES), SUM(QTDE)
+  FROM (SELECT DS_SAL_CIR, TURNO, MINUTES, COUNT(AVISO) QTDE --DT_REALIZACAO
+          FROM (SELECT AVISO,
+                       DS_ESPECIALID,
+                       DS_SAL_CIR,
+                       TURNO,
+                       TEMPO_SALA,
+                       HORAS,
+                       (HORAS * 60) TMP,
+                       ((HORAS * 60) + MINUTOS) MINUTES,
+                       MINUTOS,
+                       DT_REALIZACAO
+                  FROM (
+
+                        SELECT AVISO_CIRURGIA.CD_AVISO_CIRURGIA AVISO,
+                                TO_CHAR(AVISO_CIRURGIA.DT_REALIZACAO,
+                                        'DD/MM/YYYY') DT_REALIZACAO,
+                                AVISO_CIRURGIA . NM_PACIENTE NM_PACIENTE,
+                                CIRURGIA . DS_CIRURGIA DS_CIRURGIA,
+                                ESP.DS_ESPECIALID,
+                                TO_CHAR(AVISO_CIRURGIA.DT_REALIZACAO, 'HH24:MI') DT_ENTRADA_SALA,
+                                SAL_CIR.DS_SAL_CIR,
+                                TO_CHAR(AVISO_CIRURGIA.DT_SAIDA_SAL_CIR,
+                                        'HH24:MI') DT_SAIDA_SAL_CIR,
+                                TO_CHAR(AVISO_CIRURGIA.DT_FIM_LIMPEZA, 'HH24:MI') HORA_LIBERACAO_SALA,
+                                LPAD(TRUNC(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                               AVISO_CIRURGIA.DT_REALIZACAO) * 24),
+                                     2,
+                                     '0') || ':' ||
+                                LPAD(TRUNC((MOD(TRUNC(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                                          AVISO_CIRURGIA.DT_REALIZACAO) * 24 * 60),
+                                                60))),
+                                     2,
+                                     '0') || ':' ||
+                                LPAD(TRUNC((MOD(ROUND(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                                          AVISO_CIRURGIA.DT_REALIZACAO) * 24 * 60 * 60),
+                                                60))),
+                                     2,
+                                     '0') TEMPO_SALA,
+                                CASE
+                                  WHEN TO_CHAR(AVISO_CIRURGIA. DT_INICIO_CIRURGIA,
+                                               'HH24:MI') BETWEEN '00:00' AND
+                                       '06:59' THEN
+                                   'madrugada'
+                                  WHEN TO_CHAR(AVISO_CIRURGIA. DT_INICIO_CIRURGIA,
+                                               'HH24:MI') BETWEEN '07:00' AND
+                                       '12:59' THEN
+                                   'manhã'
+                                  WHEN TO_CHAR(AVISO_CIRURGIA. DT_INICIO_CIRURGIA,
+                                               'HH24:MI') BETWEEN '13:00' AND
+                                       '18:59' THEN
+                                   'tarde'
+                                  ELSE
+                                   'noite'
+                                END AS TURNO,
+                                PRESTADOR . NM_PRESTADOR NM_PRESTADOR,
+                                DECODE(CIRURGIA_AVISO.TP_NATUREZA,
+                                       'L',
+                                       'LIMPA',
+                                       'C',
+                                       'CONTAMINADA',
+                                       'I',
+                                       'INFECTADA',
+                                       'POTENCIALMENTE CONTAMINADA') TP_NATUREZA,
+                                LPAD(TRUNC(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                               AVISO_CIRURGIA.DT_REALIZACAO) * 24),
+                                     2,
+                                     '0') HORAS,
+                                LPAD(TRUNC((MOD(TRUNC(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                                          AVISO_CIRURGIA.DT_REALIZACAO) * 24 * 60),
+                                                60))),
+                                     2,
+                                     '0') MINUTOS,
+                                LPAD(TRUNC((MOD(ROUND(ABS(AVISO_CIRURGIA.DT_FIM_LIMPEZA -
+                                                          AVISO_CIRURGIA.DT_REALIZACAO) * 24 * 60 * 60),
+                                                60))),
+                                     2,
+                                     '0') SEGUNDOS
+
+                          FROM DBAMV . PRESTADOR_AVISO PRESTADOR_AVISO,
+                                DBAMV . PRESTADOR PRESTADOR,
+                                DBAMV . AVISO_CIRURGIA AVISO_CIRURGIA,
+                                DBAMV . CIRURGIA_AVISO CIRURGIA_AVISO,
+                                DBAMV . CIRURGIA CIRURGIA,
+                                DBAMV . ESPECIALID ESP,
+                                DBAMV . SAL_CIR SAL_CIR,
+                                CEN_CIR
+                         WHERE AVISO_CIRURGIA.CD_AVISO_CIRURGIA =
+                               CIRURGIA_AVISO.CD_AVISO_CIRURGIA
+                           AND CIRURGIA_AVISO.CD_AVISO_CIRURGIA =
+                               PRESTADOR_AVISO.CD_AVISO_CIRURGIA
+                           AND ESP.CD_ESPECIALID = CIRURGIA_AVISO.CD_ESPECIALID
+                           AND CIRURGIA_AVISO.CD_CIRURGIA =
+                               PRESTADOR_AVISO.CD_CIRURGIA
+                           AND CIRURGIA_AVISO.CD_CIRURGIA =
+                               CIRURGIA.CD_CIRURGIA
+                           AND PRESTADOR_AVISO.CD_PRESTADOR =
+                               PRESTADOR.CD_PRESTADOR
+                           AND AVISO_CIRURGIA.TP_SITUACAO = 'R'
+                           AND AVISO_CIRURGIA.CD_SAL_CIR =
+                               SAL_CIR.CD_SAL_CIR(+)
+                           AND CEN_CIR.CD_CEN_CIR = 1
+                           AND SAL_CIR.CD_CEN_CIR = CEN_CIR.CD_CEN_CIR
+                           AND (TRUNC(AVISO_CIRURGIA.DT_REALIZACAO)
+    BETWEEN $P{data_inicial}  AND  $P{data_final}  )
+                        -- AND aviso_cirurgia.cd_aviso_cirurgia = '93857'
+                        )
+
+                )
+         GROUP BY TURNO, DS_SAL_CIR, MINUTES)
+ GROUP BY DS_SAL_CIR, TURNO
+ ORDER BY 2,1]]>
+	</queryString>
+	<field name="DS_SAL_CIR" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.String"/>
+	<field name="SUM(MINUTES)" class="java.math.BigDecimal"/>
+	<field name="SUM(QTDE)" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="706e293e-64d6-42ae-a336-d762e73e7600"/>
+				<text><![CDATA[Sala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="02825af7-9e9a-4c22-a6c9-23f10c2f556f"/>
+				<text><![CDATA[Turno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="39b2103f-68f4-4532-9894-107b362c7498"/>
+				<text><![CDATA[Qtde Minutos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="82" height="20" uuid="ccb4ca74-1e8d-47a3-ac23-964ab3b48beb"/>
+				<text><![CDATA[N° de Cirurgias]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="fc092f08-6276-42f0-86b5-5ecfb6a2436d"/>
+				<textFieldExpression><![CDATA[$F{TURNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="50b8734d-87b6-4244-9332-b6ae5e97fff5"/>
+				<textFieldExpression><![CDATA[$F{DS_SAL_CIR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="965e8683-b7bc-461d-8bcd-78bb3aa87208"/>
+				<textFieldExpression><![CDATA[$F{SUM(MINUTES)}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="3" width="100" height="20" uuid="71cd0db9-4589-4b67-abd0-03600a14638c"/>
+				<textFieldExpression><![CDATA[$F{SUM(QTDE)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

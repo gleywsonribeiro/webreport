@@ -1,0 +1,70 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima">
+
+    <h:form id="menuform"> 
+        <div class="layout-menu #{guestPreferences.menuClass}">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <pu:menu widgetVar="me">
+                        <p:menuitem id="um_dashboard" value="Inicio" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:submenu label="Farmácia" icon="&#128138;">
+                            <p:menuitem value="Prescrições por Especialidade" outcome="/telas/prescricoesPrestador"/>
+                            <p:menuitem value="Prescrições após 14:00h" outcome="/telas/prescricaoPos14"/>
+                            <p:menuitem value="Antimicrobianos por Paciente" outcome="/telas/antimicrobianos"/>
+                        </p:submenu>
+                        <p:submenu label="SADT" icon="&#128189;">
+                            <p:menuitem value="Exames Diários" outcome="/telas/examesDiarios"/>
+                            <p:menuitem value="Exames Diários por Convênio" outcome="/telas/ExamesDiariosPorConvenio" />
+                        </p:submenu>
+                        <p:submenu label="Portaria" icon="&#128707;">
+                            <p:menuitem value="Relatório de Entradas" outcome="/telas/portaria/entradas" />
+                            <p:menuitem value="Relatório de Acompanhantes" outcome="/telas/portaria/acompanhantes" />
+                        </p:submenu>
+                        <p:submenu label="SPP" icon="&#128194;">
+                            <p:menuitem value="Censo" outcome="/telas/spp/censo"/>
+                            <p:menuitem value="Altas Saídas" outcome="/telas/spp/altas"/>
+                            <p:menuitem value="FAU" outcome="/telas/spp/fau"/>
+                        </p:submenu>
+                        <p:submenu label="SAU" icon="&#128172;">
+                            <p:menuitem value="Ura Internação" outcome="/telas/sau/ura"/>
+                            <p:menuitem value="SADT Externo" outcome="/telas/sau/sadt"/>
+                        </p:submenu>
+                        <p:submenu label="Centro Cirúrgico" icon="&#128186;">
+                            <p:menuitem value="Ocupação por Sala" outcome="/telas/cc/ocupacao"/>
+                            <p:menuitem value="Duração de Cirurgias" outcome="/telas/cc/cirurgias"/>
+                            <p:menuitem value="Cirurgias por Turno" outcome="/telas/cc/turno_sala"/>
+                        </p:submenu>
+                        <p:submenu label="NIR" icon="&#128716;">
+                            <p:menuitem value="Censo por Setor" outcome="/telas/nir/censo_setor"/>
+                        </p:submenu>
+                        <p:submenu label="Lavanderia" icon="&#128084;">
+                            <p:menuitem value="Pacientes Interior" outcome="/telas/lavanderia/pacientes_interior"/>
+                        </p:submenu>
+                        <p:submenu label="Custos" icon="&#128178;">
+                            <p:menuitem value="Relatório de Consumo" outcome="/telas/custos/consumo"/>
+                        </p:submenu>
+
+                        <p:submenu label="Auditoria" icon="&#128203;">
+                            <p:menuitem value="Grau de Complexidade" outcome="/telas/auditoria/grau_complexidade"/>
+                        </p:submenu>
+
+                        <p:submenu label="Laboratório" icon="&#128300;">
+                            <p:menuitem value="Exames Urgentes" outcome="/telas/laboratorio/exames_urgentes"/>
+                        </p:submenu>
+                        <p:submenu label="Reabilitação" icon="&#127939;">
+                            <p:menuitem value="MIF" outcome="/telas/reabilitacao/mif"/>
+                        </p:submenu>
+                        
+                        <p:menuitem value="Sair" icon="&#xE897;" action="#{loginController.logout}"/>
+
+                    </pu:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consumo" pageWidth="1300" pageHeight="842" columnWidth="1260" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="ff3c1733-5153-48f3-b932-a51de71daf06">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="253"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cd_mes" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cd_ano" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT LPAD(CD_MES, 2, 0) || '/' || CD_ANO COMPETENCIA,
+       DS_ESPECIE GRUPO,
+       NM_SETOR SETOR,
+       CD_PRODUTO ITEM,
+       DS_PRODUTO DS_ITEM,
+       QT_SAIDA QUANTIDADE,
+       ROUND((VL_SAIDA / ABS(QT_SAIDA)), 4) CUSTO_UNITARIO
+  FROM (
+        --SAIDAS SETOR
+        SELECT C.cd_setor,
+                C.nm_setor,
+                C.Cd_Mes,
+                C.Cd_Ano,
+                C.cd_especie,
+                C.ds_especie,
+                C.cd_produto,
+                C.ds_produto,
+                C.qt_saida_setor QT_SAIDA,
+                C.vl_saida_setor VL_SAIDA
+          FROM V_CONSUMO C
+        UNION ALL ----------------------------------
+        --DEVOLUCOES SETOR
+        SELECT C.cd_setor,
+               C.nm_setor,
+               C.Cd_Mes,
+               C.Cd_Ano,
+               C.cd_especie,
+               C.ds_especie,
+               C.cd_produto,
+               C.ds_produto,
+               (0 - C.qt_devolvida_setor) QT_SAIDA,
+               C.vl_devolvida_setor VL_SAIDA
+          FROM V_CONSUMO C
+        UNION ALL ----------------------------------
+        --SAIDAS PACIENTE
+        SELECT C.cd_setor,
+               C.nm_setor,
+               C.Cd_Mes,
+               C.Cd_Ano,
+               C.cd_especie,
+               C.ds_especie,
+               C.cd_produto,
+               C.ds_produto,
+               C.qt_saida_paciente QT_SAIDA,
+               C.vl_saida_paciente VL_SAIDA
+          FROM V_CONSUMO C
+        UNION ALL ----------------------------------
+        --DEVOLUCOES PACIENTE
+        SELECT C.cd_setor,
+               C.nm_setor,
+               C.Cd_Mes,
+               C.Cd_Ano,
+               C.cd_especie,
+               C.ds_especie,
+               C.cd_produto,
+               C.ds_produto,
+               (0 - C.qt_devolvida_paciente) QT_SAIDA,
+               C.vl_devolvida_paciente VL_SAIDA
+          FROM V_CONSUMO C)
+ WHERE VL_SAIDA IS NOT NULL
+   AND CD_MES = $P{cd_mes}
+   AND CD_ANO = $P{cd_ano}]]>
+	</queryString>
+	<field name="COMPETENCIA" class="java.lang.String"/>
+	<field name="GRUPO" class="java.lang.String"/>
+	<field name="SETOR" class="java.lang.String"/>
+	<field name="ITEM" class="java.math.BigDecimal"/>
+	<field name="DS_ITEM" class="java.lang.String"/>
+	<field name="QUANTIDADE" class="java.math.BigDecimal"/>
+	<field name="CUSTO_UNITARIO" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="79" height="20" uuid="3207969f-8b04-4d35-9220-d3cb19bbb6af"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMPETENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="0" width="251" height="20" uuid="da6ab232-8438-4008-8410-723e0e90fe21"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRUPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="209" height="20" uuid="8699022e-8a5c-4d84-8fd3-ca9b6931a3bb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SETOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="539" y="0" width="61" height="20" uuid="9c10668c-f772-4c6d-ae3b-16ddc229aa7c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ITEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="469" height="20" uuid="3c427b49-13f6-42a9-b0cd-12656c66644a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DS_ITEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1145" y="0" width="115" height="20" uuid="8debf013-d7d7-4cc7-809f-29f48380c5b9"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUSTO_UNITARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1069" y="0" width="76" height="20" uuid="b5e5550e-001d-4565-9eb2-6014571d660f"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[QUANTIDADE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="79" height="20" uuid="394d8e75-d496-4b19-9e47-766f868ebdde"/>
+				<textFieldExpression><![CDATA[$F{COMPETENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="0" width="251" height="20" uuid="4c801267-51e8-4f2d-b46b-3aed57fa36f6"/>
+				<textFieldExpression><![CDATA[$F{GRUPO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="209" height="20" uuid="3809ad0b-ac06-4841-8bec-11c3a458bf86"/>
+				<textFieldExpression><![CDATA[$F{SETOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="539" y="0" width="61" height="20" uuid="3cf1b152-afe9-456c-9e9c-fb00537ad58b"/>
+				<textFieldExpression><![CDATA[$F{ITEM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="469" height="20" uuid="b0146076-5979-411d-abe9-78517146dfa4"/>
+				<textFieldExpression><![CDATA[$F{DS_ITEM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1069" y="0" width="76" height="20" uuid="cd0d116f-a3c0-4855-9655-410afeda4508"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{QUANTIDADE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="1145" y="0" width="115" height="20" uuid="2cd4c1cd-c2f9-4fa6-8cd4-70d51bb0828e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUSTO_UNITARIO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

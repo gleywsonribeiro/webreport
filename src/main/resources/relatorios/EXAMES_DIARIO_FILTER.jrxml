@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EXAMES_DIARIO" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="51951a20-b3ee-444b-bb59-e803ca909b76">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="convenio" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select trunc(it.dt_assinado)DATA_ASSINATURA,
+       exa_lab.cd_exa_lab,
+       exa_lab.nm_exa_lab EXAME,
+       c.nm_convenio,
+       (DECODE(IT. SN_REALIZADO, 'N', ' * ', '') || EXA_LAB . NM_EXA_LAB) DS_EXA_RX,
+       count(*) qtde
+  from exa_lab, itped_lab it, ped_lab la, convenio c
+ where la.cd_convenio = c.cd_convenio
+   AND IT . SN_REALIZADO = 'S'
+   and la.cd_ped_lab = it.cd_ped_lab
+   and exa_lab.cd_exa_lab = it.cd_exa_lab
+   and it.sn_assinado = 'S'
+   --and to_char(it.dt_laudo, 'dd/mm/yyyy') = '28/04/2015'
+   and trunc(it.dt_assinado) between $P{data_inicial} and $P{data_final}
+   and c.cd_convenio = $P{convenio}
+   --and it.dt_assinado is not null
+-- and exa_lab.nm_exa_lab like 'HEMOGRAMA COMPLETO'
+
+  and c.cd_convenio <> 49
+ group by dt_laudo,
+          dt_assinado,
+          it.sn_assinado,
+          exa_lab.cd_exa_lab,
+          nm_exa_lab,
+          nm_convenio,
+          IT. SN_REALIZADO
+
+ order by dt_assinado]]>
+	</queryString>
+	<field name="DATA_ASSINATURA" class="java.sql.Timestamp"/>
+	<field name="CD_EXA_LAB" class="java.math.BigDecimal"/>
+	<field name="EXAME" class="java.lang.String"/>
+	<field name="NM_CONVENIO" class="java.lang.String"/>
+	<field name="DS_EXA_RX" class="java.lang.String"/>
+	<field name="QTDE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="214" height="20" forecolor="#003366" uuid="bbf1efae-feb9-4f5d-88f0-ffb1d614b109"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exames Diários por Convênio]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="2500" height="42" uuid="a66cf694-7000-40ce-84ea-bc0fd3610b30"/>
+				<rowGroup name="EXAME" width="230" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{EXAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="230" height="25" uuid="2c403036-298f-4933-83cd-19afd1b304e2"/>
+								<textFieldExpression><![CDATA[$V{EXAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="220" height="25" uuid="3fab878f-082f-4184-b796-0cc9841f56dd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total EXAME]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="DATA_ASSINATURA" height="30" totalPosition="End">
+					<bucket class="java.sql.Timestamp">
+						<bucketExpression><![CDATA[$F{DATA_ASSINATURA}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="30" uuid="6c19c8f4-72ce-4b4c-9a77-27aa3699b432"/>
+								<textFieldExpression><![CDATA[$V{DATA_ASSINATURA}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="86efd407-7dcb-476c-bfa5-407e1e4935e1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total DATA_ASSINATURA]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="QTDEMeasure" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{QTDE}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="baf096fd-787a-4faf-b23e-3cd2783e6639"/>
+							<textFieldExpression><![CDATA[$V{QTDEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="EXAME">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="d4f3d50e-5189-49d3-93f1-f1515a32591c"/>
+							<textFieldExpression><![CDATA[$V{QTDEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="DATA_ASSINATURA">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="78d4273e-6923-4152-94d3-bcfa544da1c0"/>
+							<textFieldExpression><![CDATA[$V{QTDEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="EXAME" columnTotalGroup="DATA_ASSINATURA">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="c577261c-a593-4589-a152-e1bc9fbfac13"/>
+							<textFieldExpression><![CDATA[$V{QTDEMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

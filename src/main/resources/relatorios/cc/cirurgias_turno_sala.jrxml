@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cirurgias_turno_sala" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="48936a27-0127-430a-a850-d3044654da28">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="centro_cir" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_inicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_fim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[--nova pesquisa
+SELECT BLOCO, TURNO, SALA, SUM(MINUTOS) "TOTAL MINUTOS", COUNT(*) TOTAL
+  FROM (
+
+        SELECT PES.*,
+                CASE
+                  WHEN MINUTOS >= 1 AND MINUTOS < 85 THEN
+                   'PORTE 1'
+                  WHEN MINUTOS >= 85 AND MINUTOS < 175 THEN
+                   'PORTE 2'
+                  WHEN MINUTOS >= 175 AND MINUTOS < 295 THEN
+                   'PORTE 3'
+                  WHEN MINUTOS >= 295 THEN
+                   'PORTE 4'
+                END PORTE
+          FROM (
+
+                 SELECT CC.DS_CEN_CIR BLOCO,
+                         SALA.DS_SAL_CIR SALA,
+                         A.CD_AVISO_CIRURGIA AVISO,
+                         A.DT_AVISO_CIRURGIA DT_AVISO,
+                         TO_CHAR(A.DT_REALIZACAO, 'MM/YYYY') MES_ANO,
+                         PAC.CD_PACIENTE RH,
+                         PAC.NM_PACIENTE PACIENTE,
+                         ATE.CD_ATENDIMENTO ATENDIMENTO,
+                         ATE.DT_ATENDIMENTO,
+                         ATE.TP_ATENDIMENTO,
+                         CASE
+                           WHEN TO_CHAR(A.DT_INICIO_CIRURGIA, 'HH24:MI') BETWEEN
+                                '00:00' AND '06:59' THEN
+                            'MADRUGADA'
+                           WHEN TO_CHAR(A.DT_INICIO_CIRURGIA, 'HH24:MI') BETWEEN
+                                '07:00' AND '12:59' THEN
+                            'MANHA'
+                           WHEN TO_CHAR(A.DT_INICIO_CIRURGIA, 'HH24:MI') BETWEEN
+                                '13:00' AND '18:59' THEN
+                            'TARDE'
+                           ELSE
+                            'NOITE'
+                         END AS TURNO,
+                         A.DT_REALIZACAO DT_INICIO,
+                         A.DT_FIM_LIMPEZA DT_FIM,
+                         TRUNC((A.DT_FIM_LIMPEZA - A.DT_REALIZACAO) * 24 * 60) MINUTOS
+                   FROM AVISO_CIRURGIA A,
+                         PACIENTE       PAC,
+                         ATENDIME       ATE,
+                         CEN_CIR        CC,
+                         SAL_CIR        SALA
+                  WHERE A.TP_SITUACAO = 'R'
+                    AND PAC.CD_PACIENTE = A.CD_PACIENTE
+                    AND ATE.CD_PACIENTE = PAC.CD_PACIENTE
+                    AND A.CD_ATENDIMENTO = ATE.CD_ATENDIMENTO
+                    AND CC.CD_CEN_CIR = $P{centro_cir}
+                    AND A.CD_CEN_CIR = CC.CD_CEN_CIR
+                       --AND A.CD_AVISO_CIRURGIA = 88976
+                    AND A.CD_SAL_CIR = SALA.CD_SAL_CIR
+                    AND TRUNC(A.DT_REALIZACAO) BETWEEN $P{data_inicio} AND
+                     $P{data_fim}
+                 ) PES
+
+        )
+ GROUP BY BLOCO, TURNO, SALA
+ ORDER BY BLOCO, TURNO, SALA
+
+--->]]>
+	</queryString>
+	<field name="BLOCO" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.String"/>
+	<field name="SALA" class="java.lang.String"/>
+	<field name="TOTAL MINUTOS" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<variable name="BLOCO_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{BLOCO}]]></variableExpression>
+	</variable>
+	<group name="bloco">
+		<groupExpression><![CDATA[$F{BLOCO}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="0" y="30" width="138" height="20" forecolor="#006666" uuid="63c2f72c-4330-4262-8228-38155dece39c"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TURNO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="138" y="30" width="138" height="20" forecolor="#006666" uuid="daf090ff-4da9-42eb-98da-c05af2e7027b"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SALA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="276" y="30" width="138" height="20" forecolor="#006666" uuid="c31c9d79-c83d-4b82-b4eb-8726b72ec0a5"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL MINUTOS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="414" y="30" width="138" height="20" forecolor="#006666" uuid="49bd157a-d71e-4dfe-9d87-197c5767f36b"/>
+					<textElement textAlignment="Right">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<staticText>
+				<reportElement x="23" y="0" width="311" height="39" uuid="2948acae-825b-44ea-95f7-4d6d7890b401"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Relatório por turno X sala]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="0" width="51" height="20" uuid="a7b80116-6e5b-47ad-990e-710c020e841a"/>
+				<text><![CDATA[Período:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="414" y="0" width="100" height="20" uuid="920c83b8-4a79-458d-b809-b8c3a3b45d22"/>
+				<textFieldExpression><![CDATA[$P{data_inicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="414" y="20" width="100" height="20" uuid="6869601e-e238-4a0a-ab13-04e49008ddd2"/>
+				<textFieldExpression><![CDATA[$P{data_fim}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="276" height="20" forecolor="#990000" uuid="96abac2c-7d2c-49a1-accb-94f72f91ef7b"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BLOCO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="138" height="20" uuid="846b0418-c48f-4e26-93cd-2dea47bb7239"/>
+				<textFieldExpression><![CDATA[$F{TURNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="138" y="0" width="138" height="20" uuid="aceea5e7-5feb-43b8-ba28-51f526c6497e"/>
+				<textFieldExpression><![CDATA[$F{SALA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="276" y="0" width="138" height="20" uuid="e6584044-274a-44fa-854c-992e37dc15fd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{TOTAL MINUTOS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="0" width="138" height="20" uuid="12687545-1154-45c5-9bdf-bb10e7d18e3b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

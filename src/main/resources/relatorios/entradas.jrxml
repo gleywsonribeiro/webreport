@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="entradas" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="18e1ab1d-8492-4279-a5b8-e9a3808e810c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dt_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT MES_ANO,
+       NOME_UNIDADE_INTERNACAO,
+       DECODE(VISITANTE_ACOMPANHANTE,
+       'V', 'VISITANTE',
+       'A', 'ACOMPANHANTE') VISITANTE_ACOMPANHANTE,
+       COUNT(*) QTDE
+  FROM (
+
+        SELECT VDIC_CADASTRO_INTERNACAO.ATENDIMENTO_DO_PACIENTE,
+                VDIC_CADASTRO_INTERNACAO.NOME_UNIDADE_INTERNACAO,
+                VDIC_CADASTRO_PACIENTE_RES.NOME_DO_PACIENTE,
+                VDIC_MOVIMENTA_VISITA_ACOM.CODIGO_VISITANTE_ACOMPANHANTE CODIGO_VISITANTE_ACOMPANH,
+                VDIC_MOVIMENTA_VISITA_ACOM.DATA_ENTRADA,
+                TO_CHAR(VDIC_MOVIMENTA_VISITA_ACOM.DATA_ENTRADA, 'MM/yyyy') MES_ANO,
+                VDIC_MOVIMENTA_VISITA_ACOM.HORA_ENTRADA,
+                VDIC_MOVIMENTA_VISITA_ACOM.USUARIO_ENTRADA,
+                VDIC_CADASTRO_INTERNACAO.DATA_ALTA,
+                VDIC_MOVIMENTA_VISITA_ACOM.HORA_SAIDA,
+                VDIC_MOVIMENTA_VISITA_ACOM.USUARIO_SAIDA,
+                VDIC_MOVIMENTA_VISITA_ACOM.NOME_VISITANTE_ACOMPANHANTE NOME_VISITANTE_ACOMPANHAN,
+                VDIC_MOVIMENTA_VISITA_ACOM.TELEFONE,
+                VDIC_MOVIMENTA_VISITA_ACOM.DESCRICAO_DOCUMENTO,
+                VDIC_MOVIMENTA_VISITA_ACOM.NUMERO_DOCUMENTO,
+                VDIC_MOVIMENTA_VISITA_ACOM.DESCRICAO_TIPO_PARENTESCO,
+                VDIC_MOVIMENTA_VISITA_ACOM.NOME_AUTORIZADOR,
+                VDIC_MOVIMENTA_VISITA_ACOM.NUMERO_RAMAL,
+                VDIC_CADASTRO_INTERNACAO.DATA_ATENDIMENTO,
+                VDIC_CADASTRO_INTERNACAO.HORA_ATENDIMENTO,
+                VDIC_CADASTRO_INTERNACAO.DESCRICAO_TIPO_ACOMODACAO,
+                VDIC_CADASTRO_INTERNACAO.DESCRICAO_TIPO_INTERNACAO,
+                VDIC_CADASTRO_INTERNACAO.NOME_RESUMIDO_LEITO,
+                VDIC_CADASTRO_PACIENTE_RES.DATA_DE_NASCIMENTO,
+                VDIC_MOVIMENTA_VISITA_ACOM.VISITANTE_ACOMPANHANTE,
+                VDIC_MOVIMENTA_VISITA_ACOM.DATA_SAIDA,
+                (select user from dual) select_user_from_dual
+          FROM DBAMV.VDIC_CADASTRO_INTERNACAO   VDIC_CADASTRO_INTERNACAO,
+                DBAMV.VDIC_CADASTRO_PACIENTE_RES VDIC_CADASTRO_PACIENTE_RES,
+                DBAMV.VDIC_MOVIMENTA_VISITA_ACOM VDIC_MOVIMENTA_VISITA_ACOM
+         WHERE VDIC_CADASTRO_PACIENTE_RES.PRONTUARIO(+) =
+               VDIC_CADASTRO_INTERNACAO.PRONTUARIO
+           AND VDIC_MOVIMENTA_VISITA_ACOM.ATENDIMENTO_DO_PACIENTE =
+               VDIC_CADASTRO_INTERNACAO.ATENDIMENTO_DO_PACIENTE
+           AND VDIC_CADASTRO_INTERNACAO.SN_RECEBE_VISITA = 'S'
+           AND TRUNC(VDIC_MOVIMENTA_VISITA_ACOM.DATA_ENTRADA) BETWEEN $P{dt_inicial} AND $P{dt_final}
+         ORDER BY VDIC_CADASTRO_INTERNACAO.ATENDIMENTO_DO_PACIENTE,
+                   VDIC_MOVIMENTA_VISITA_ACOM.CODIGO_VISITANTE_ACOMPANHANTE
+
+        )
+ GROUP BY MES_ANO, NOME_UNIDADE_INTERNACAO, VISITANTE_ACOMPANHANTE
+ ORDER BY MES_ANO, NOME_UNIDADE_INTERNACAO, VISITANTE_ACOMPANHANTE]]>
+	</queryString>
+	<field name="MES_ANO" class="java.lang.String"/>
+	<field name="NOME_UNIDADE_INTERNACAO" class="java.lang.String"/>
+	<field name="VISITANTE_ACOMPANHANTE" class="java.lang.String"/>
+	<field name="QTDE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50">
+			<staticText>
+				<reportElement x="138" y="14" width="284" height="20" forecolor="#006666" uuid="a21d3e71-5e99-4ee0-bdaa-a446831d4f17"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de Entradas]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="138" height="20" forecolor="#000000" backcolor="#000000" uuid="f1a71b75-4b80-4e8e-a4ca-920fa0356ce0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MM/AAAA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="138" y="0" width="235" height="20" forecolor="#000000" backcolor="#000000" uuid="ffb08ac0-8639-43e5-aefb-f198c9bce5c6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADE DE INTERNAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="373" y="0" width="291" height="20" forecolor="#000000" backcolor="#000000" uuid="2a6e98ba-9f9f-40b2-88a9-99fa10096389"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DE ENTRADA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="664" y="0" width="138" height="20" forecolor="#000000" backcolor="#000000" uuid="373817a7-82d6-4591-8529-385ed3b5b908"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="138" height="20" uuid="edfc390e-7721-4035-a5a6-509ab3768cda"/>
+				<textFieldExpression><![CDATA[$F{MES_ANO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="138" y="0" width="235" height="20" uuid="148d4081-b3e0-4bc0-8c30-c3c752efaca0"/>
+				<textFieldExpression><![CDATA[$F{NOME_UNIDADE_INTERNACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="373" y="0" width="291" height="20" uuid="c2e51ae7-9f4a-4c31-96ba-00eb03316cfd"/>
+				<textFieldExpression><![CDATA[$F{VISITANTE_ACOMPANHANTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="664" y="0" width="138" height="20" uuid="729b1706-17fd-4e24-9a04-bb8b02138ea0"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{QTDE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
