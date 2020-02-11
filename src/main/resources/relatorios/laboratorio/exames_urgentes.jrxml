@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exames de urgencia" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e0a47126-11b5-40cc-8e20-217e4eb17d6f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exames de urgencia" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e0a47126-11b5-40cc-8e20-217e4eb17d6f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -10,7 +10,9 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select n2.dt_pre_med,
+		<![CDATA[select n2.cd_setor,
+       n2.nm_setor,
+       n2.dt_pre_med,
        n2.dh_pre_med,
        n2.dt_assinado,
        n2.cd_ped_lab,
@@ -25,7 +27,9 @@
                TRUNC(TRUNC((86400 * (n1.dt_assinado - n1.dh_pre_med) / 60) -
                            60 *
                            (TRUNC(((86400 * (n1.dt_assinado - n1.dh_pre_med)) / 60) / 60)))) minuto
-          from (select ped.cd_ped_lab,
+          from (select s.cd_setor,
+                       s.nm_setor,
+                       ped.cd_ped_lab,
                        pre.dt_pre_med,
                        pre.hr_pre_med,
                        to_date(to_char(pre.dt_pre_med, 'dd/mm/yyyy') ||
@@ -42,19 +46,23 @@
                        exa_lab   exa,
                        itpre_med itp,
                        tip_presc tip,
-                       pre_med   pre
+                       pre_med   pre,
+                       setor     s
                  where ipl.cd_ped_lab = ped.cd_ped_lab
                    and exa.cd_exa_lab = ipl.cd_exa_lab
                    and itp.cd_pre_med = ped.cd_pre_med
                    and itp.sn_urgente = 'S'
                    and ipl.dt_assinado is not null
+                   and s.cd_setor = ped.cd_setor
                    and tip.cd_tip_presc = itp.cd_tip_presc
                    and exa.cd_exa_lab = tip.cd_exa_lab
                    and exa.nm_exa_lab not like '%CULTURA%'
                    and pre.cd_pre_med = itp.cd_pre_med) n1) n2
- where n2.dt_pre_med between $P{data_inicial} and $P{data_final}
+where n2.dt_pre_med between $P{data_inicial} and $P{data_final}
  order by dt_pre_med]]>
 	</queryString>
+	<field name="CD_SETOR" class="java.math.BigDecimal"/>
+	<field name="NM_SETOR" class="java.lang.String"/>
 	<field name="DT_PRE_MED" class="java.sql.Timestamp"/>
 	<field name="DH_PRE_MED" class="java.sql.Timestamp"/>
 	<field name="DT_ASSINADO" class="java.sql.Timestamp"/>
@@ -73,64 +81,87 @@
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="bddd39f9-d46f-4a9f-a60b-1604f7db0bff"/>
+				<reportElement x="216" y="0" width="100" height="20" forecolor="#006600" uuid="bddd39f9-d46f-4a9f-a60b-1604f7db0bff"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[DT_PEDIDO]]></text>
+				<text><![CDATA[Data Pedido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="0" width="100" height="20" uuid="8eb57142-bf59-483d-9892-b661a3003d93"/>
+				<reportElement x="316" y="0" width="100" height="20" forecolor="#006600" uuid="8eb57142-bf59-483d-9892-b661a3003d93"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[LIBERAÇÃO]]></text>
+				<text><![CDATA[Data Liberação]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="0" width="100" height="20" uuid="e10deaad-3920-4557-90b3-a5aa664176f6"/>
+				<reportElement x="416" y="0" width="100" height="20" forecolor="#006600" uuid="e10deaad-3920-4557-90b3-a5aa664176f6"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[PEDIDO]]></text>
+				<text><![CDATA[Pedido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="402" height="20" uuid="e5d1fc6d-00d6-4c37-82e1-2d3dd962ab74"/>
+				<reportElement x="516" y="0" width="344" height="20" forecolor="#006600" uuid="e5d1fc6d-00d6-4c37-82e1-2d3dd962ab74"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[EXAME]]></text>
+				<text><![CDATA[Exame]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="702" y="0" width="100" height="20" uuid="18aa5dc0-3179-4b16-9861-44063bb7d5e8"/>
+				<reportElement x="860" y="0" width="100" height="20" forecolor="#006600" uuid="18aa5dc0-3179-4b16-9861-44063bb7d5e8"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[TEMPO]]></text>
+				<text><![CDATA[Tempo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="52" height="20" forecolor="#006600" uuid="fee6bab0-9665-425d-9aad-07037bf475f7"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="0" width="164" height="20" forecolor="#006600" uuid="5c65fdcf-abdd-4b8b-9fed-cf6c2937bf1b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Setor]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="4e69db7d-b128-4fcd-8bd5-51753cb6a633"/>
+				<reportElement x="216" y="0" width="100" height="20" uuid="4e69db7d-b128-4fcd-8bd5-51753cb6a633"/>
 				<textFieldExpression><![CDATA[$F{DH_PRE_MED}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="c195d3e8-4727-4acd-aa51-278defe3e1d0"/>
+				<reportElement x="316" y="0" width="100" height="20" uuid="c195d3e8-4727-4acd-aa51-278defe3e1d0"/>
 				<textFieldExpression><![CDATA[$F{DT_ASSINADO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="100" height="20" uuid="bb776759-5355-4b7b-8301-b37b1643a284"/>
+				<reportElement x="416" y="0" width="100" height="20" uuid="bb776759-5355-4b7b-8301-b37b1643a284"/>
 				<textFieldExpression><![CDATA[$F{CD_PED_LAB}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="0" width="402" height="20" uuid="73911dd1-b4d5-452c-a041-8c205286c1ca"/>
+				<reportElement x="516" y="0" width="344" height="20" uuid="73911dd1-b4d5-452c-a041-8c205286c1ca"/>
 				<textFieldExpression><![CDATA[$F{NM_EXA_LAB}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="702" y="0" width="100" height="20" uuid="30fd18e9-1b2c-4f98-8ff9-1627520425ea"/>
+				<reportElement x="860" y="0" width="100" height="20" uuid="30fd18e9-1b2c-4f98-8ff9-1627520425ea"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{TEMPO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="52" height="20" uuid="df6caf67-fdf5-4e66-b94f-52a8d7a60a1b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{CD_SETOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="0" width="164" height="20" uuid="4b40d207-1316-4e18-b21e-ac1b08cae8e6"/>
+				<textFieldExpression><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
