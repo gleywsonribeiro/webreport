@@ -34,66 +34,45 @@ public class SppController {
 
     @Inject
     private HttpServletResponse response;
-    
+
     private Date dataInicial;
     private Date dataFinal;
-    
+
     public void censoToExcel() {
-        try {
-            Map<String, Object> parametros = new HashMap<String, Object>();
+        Map<String, Object> parametros = new HashMap<String, Object>();
 //            parametros.put("data_inicial", dataInicial);
 //            parametros.put("data_final", dataFinal);
-
-            ExecutorRelatorio executor = new ExecutorRelatorio("/relatorios/spp/censo.jasper",
-                    this.response, parametros, "censo.xls");
-
-            Connection connection = ConnectionFactory.createConnectionToOracle();
-
-            executor.executeToExcel(connection);
-
-            if (executor.isRelatorioGerado()) {
-                facesContext.responseComplete();
-            } else {
-                JsfUtil.addErrorMessage("A execução do relatório não retornou dados.");
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SppController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        getReport("/relatorios/spp/censo.jasper", parametros, "censo.xls");
     }
-    
+
     public void altasToExcel() {
-        try {
-            Map<String, Object> parametros = new HashMap<String, Object>();
-            parametros.put("date_inicial", dataInicial);
-            parametros.put("date_final", dataFinal);
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("date_inicial", dataInicial);
+        parametros.put("date_final", dataFinal);
+        getReport("/relatorios/spp/saidas.jasper", parametros, "saidas.xls");
+    }
 
-            ExecutorRelatorio executor = new ExecutorRelatorio("/relatorios/spp/saidas.jasper",
-                    this.response, parametros, "saidas.xls");
+    public void fauToExcel() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("date_inicial", dataInicial);
+        parametros.put("date_final", dataFinal);
 
-            Connection connection = ConnectionFactory.createConnectionToOracle();
+        getReport("/relatorios/spp/fau.jasper", parametros, "fau.xls");
+    }
 
-            executor.executeToExcel(connection);
+    public void ambulatorialToExcel() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("data_inicial", dataInicial);
+        parametros.put("data_final", dataFinal);
 
-            if (executor.isRelatorioGerado()) {
-                facesContext.responseComplete();
-            } else {
-                JsfUtil.addErrorMessage("A execução do relatório não retornou dados.");
-            }
-            connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SppController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        getReport("/relatorios/spp/atend_amb.jasper", parametros, "ambulatorial.xls");
     }
     
-    public void fauToExcel() {
+    private void getReport(String caminho, Map parametros, String nomeRelatorioGerado) {
         try {
-            Map<String, Object> parametros = new HashMap<String, Object>();
-            parametros.put("date_inicial", dataInicial);
-            parametros.put("date_final", dataFinal);
 
-            ExecutorRelatorio executor = new ExecutorRelatorio("/relatorios/spp/fau.jasper",
-                    this.response, parametros, "fau.xls");
+            ExecutorRelatorio executor = new ExecutorRelatorio(caminho,
+                    this.response, parametros, nomeRelatorioGerado);
 
             Connection connection = ConnectionFactory.createConnectionToOracle();
 
@@ -125,6 +104,5 @@ public class SppController {
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
-    
-    
+
 }
