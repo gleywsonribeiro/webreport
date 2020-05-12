@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="producao_oficina_setor" pageWidth="450" pageHeight="842" columnWidth="410" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="1b497aea-580f-44f1-8fd8-0d7472040082">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="oficina" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT HT.CD_SETOR,
+       HT.NM_SETOR,
+       CASE
+         WHEN HT.HORAS IS NULL THEN
+          '0'
+         ELSE
+          HT.HORAS || ':' || LPAD(HT.MINUTOS, 2, '0') || ':00'
+       END TEMPO
+  FROM (SELECT CD_SETOR,
+               NM_SETOR,
+               HORAS + TRUNC(MINUTOS / 60) HORAS,
+               MOD(MINUTOS, 60) MINUTOS
+          FROM (SELECT OS.CD_SETOR,
+                       S.NM_SETOR,
+                       COUNT(*) QTD,
+                       SUM(ITEM.VL_TEMPO_GASTO) HORAS,
+                       SUM(ITEM.VL_TEMPO_GASTO_MIN) MINUTOS
+                  FROM ITSOLICITACAO_OS ITEM,
+                       SOLICITACAO_OS OS,
+                       SETOR S,
+                       MANU_SERV SERV,
+                       OFICINA
+                 WHERE TRUNC(ITEM.HR_FINAL) BETWEEN $P{data_inicial} AND $P{data_final}
+                   AND OS.CD_SETOR = S.CD_SETOR
+                   AND OS.CD_OS = ITEM.CD_OS
+                   AND SERV.CD_SERVICO = ITEM.CD_SERVICO
+                   AND OS.CD_OFICINA = OFICINA.CD_OFICINA
+                   AND OFICINA.CD_OFICINA = $P{oficina}
+                 GROUP BY OS.CD_SETOR, S.NM_SETOR)) HT]]>
+	</queryString>
+	<field name="CD_SETOR" class="java.math.BigDecimal"/>
+	<field name="NM_SETOR" class="java.lang.String"/>
+	<field name="TEMPO" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="66" height="20" uuid="854b8b10-5b88-4df7-baa6-c0a5f888a42d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cod. Setor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="66" y="0" width="261" height="20" uuid="1b630258-fa3d-41cb-9069-bc7f8dee9e40"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Setor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="0" width="64" height="20" uuid="7ec245fd-98da-4456-b876-d9f86fd81a76"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tempo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="66" height="20" uuid="3fa6e176-52ba-4ede-b51d-1e666b3889b9"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_SETOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="0" width="64" height="20" uuid="af13e22c-507d-4b9f-9aca-a4608b157626"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TEMPO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="0" width="261" height="20" uuid="686d03af-4897-43ba-b8da-7c1c3a714d2c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

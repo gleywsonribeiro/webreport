@@ -27,6 +27,7 @@ import net.sf.jasperreports.export.PdfExporterConfiguration;
 import net.sf.jasperreports.export.PdfReportConfiguration;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.XlsExporterConfiguration;
 import net.sf.jasperreports.export.XlsReportConfiguration;
 
@@ -90,6 +91,9 @@ public class ExecutorRelatorio {
                 Exporter<ExporterInput, XlsReportConfiguration, XlsExporterConfiguration, OutputStreamExporterOutput> exportador2 = new JRXlsExporter();
                 exportador2.setExporterInput(new SimpleExporterInput(print));
                 exportador2.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+                SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+                configuration.setDetectCellType(true);
+                exportador2.setConfiguration(configuration);
                 response.setContentType("application/vnd.ms-excel");
                 response.setHeader("Content-Disposition", "attachment; filename=\""
                         + this.nomeArquivoSaida + "\"");
