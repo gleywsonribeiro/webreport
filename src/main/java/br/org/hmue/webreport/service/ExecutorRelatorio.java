@@ -94,6 +94,9 @@ public class ExecutorRelatorio {
                 SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
                 configuration.setDetectCellType(true);
                 configuration.setWhitePageBackground(false);
+              
+                configuration.setDetectCellType(true);
+                
                 exportador2.setConfiguration(configuration);
                 response.setContentType("application/vnd.ms-excel");
                 response.setHeader("Content-Disposition", "attachment; filename=\""
