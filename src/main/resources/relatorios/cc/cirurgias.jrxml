@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cirurgias" pageWidth="1300" pageHeight="595" orientation="Landscape" columnWidth="1298" leftMargin="1" rightMargin="1" topMargin="5" bottomMargin="5" isIgnorePagination="true" uuid="de48b0df-cd48-41bc-b921-77e0fc23a2f2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="centro_cir" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DT_REALIZACAO,
+       CD_ATENDIMENTO,
+       NM_PACIENTE,
+       PORTE,
+       CIRURGIA,
+       ANESTESIA,
+       NC_TIPO_CIRURGIA TIPO_CIRURGIA
+  FROM (
+
+        SELECT VC.*,
+                LAST_VALUE(VC.RANK) OVER(PARTITION BY VC.DT_REALIZACAO, VC.NM_PACIENTE ORDER BY VC.RANK range between unbounded preceding and unbounded following) ULT
+          FROM (
+
+                 SELECT C.DT_REALIZACAO,
+                         C.CD_ATENDIMENTO,
+                         C.NM_PACIENTE,
+                         C.PORTE,
+                         C.PORTE_RANK,
+                         C.CIRURGIA,
+                         C.ANESTESIA,
+                         C.NC_TIPO_CIRURGIA,
+                         ROW_NUMBER() OVER(PARTITION BY C.DT_REALIZACAO ORDER BY C.PORTE_RANK) RANK
+                   FROM V_CIRURGIAS C
+                  WHERE C.Dt_Realizacao between $P{data_inicial} and $P{data_final}
+                    and c.cd_cen_cir = $P{centro_cir}
+                    --and C.CD_ATENDIMENTO = 594127
+                  ORDER BY C.DT_REALIZACAO, C.NM_PACIENTE, C.PORTE_RANK ASC
+
+                 ) VC
+         ORDER BY VC.DT_REALIZACAO, VC.NM_PACIENTE, VC.RANK
+
+        )
+ WHERE RANK = ULT]]>
+	</queryString>
+	<field name="DT_REALIZACAO" class="java.sql.Timestamp"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="PORTE" class="java.lang.String"/>
+	<field name="CIRURGIA" class="java.lang.String"/>
+	<field name="ANESTESIA" class="java.lang.String"/>
+	<field name="TIPO_CIRURGIA" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="105" height="20" uuid="4fcf6b26-3f3c-4749-be51-60a1ed6251fa"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA REALIZAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="0" width="115" height="20" uuid="c7d0a331-a64e-4337-85c8-76729a2c9865"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="238" height="20" uuid="e3e9b3f0-d512-4180-9de7-70b88e6bc584"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="0" width="109" height="20" uuid="12c819c2-767e-4803-b28a-f3236b5569b6"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="567" y="0" width="307" height="20" uuid="c3092c1b-1c66-4e22-8d9f-a1ced0ea6b95"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="874" y="0" width="281" height="20" uuid="31d1eebd-efa1-4c0e-bfdc-b76a1df5bf2c"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANESTESIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1155" y="0" width="135" height="20" uuid="d33c4eb8-4ce4-464c-95d1-9b8bf65d34d0"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO CIRURGIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="105" height="20" uuid="c81e71e5-f9f4-4b41-94ae-74f58e19e20c"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_REALIZACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="105" y="0" width="115" height="20" uuid="21d10bd9-11d3-4887-9907-096a39d0100f"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="238" height="20" uuid="728ac8ba-4bd3-4b18-b13b-a8d9020c32b9"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="458" y="0" width="109" height="20" uuid="d4844bde-4f5d-4ee3-a4b9-cd417a946d46"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PORTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="567" y="0" width="307" height="20" uuid="a8d80722-27f9-4acd-b767-ea5a97c20f50"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="874" y="0" width="281" height="20" uuid="52593235-ad06-48ab-be12-793db27a5997"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ANESTESIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1155" y="0" width="135" height="20" uuid="f33f4bab-0a28-4269-8944-f74ff838f374"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_CIRURGIA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="procedimentos" pageWidth="2000" pageHeight="595" orientation="Landscape" columnWidth="1960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="6b1b13ad-0483-459f-8e7c-bb38d7c7e309">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="centro_cir" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *
+  from V_CIRURGIAS
+ WHERE Dt_Realizacao between $P{data_inicial} and $P{data_final}
+ AND CD_CEN_CIR = $P{centro_cir}]]>
+	</queryString>
+	<field name="AVISO" class="java.math.BigDecimal"/>
+	<field name="DT_REALIZACAO" class="java.sql.Timestamp"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="CIRURGIA" class="java.lang.String"/>
+	<field name="CD_CIRURGIA" class="java.math.BigDecimal"/>
+	<field name="ANESTESIA" class="java.lang.String"/>
+	<field name="NATUREZA" class="java.lang.String"/>
+	<field name="PORTE" class="java.lang.String"/>
+	<field name="TIPO_CIRURGIA" class="java.lang.String"/>
+	<field name="CD_CEN_CIR" class="java.math.BigDecimal"/>
+	<field name="PORTE_RANK" class="java.math.BigDecimal"/>
+	<field name="NC_TIPO_CIRURGIA" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="53" height="20" uuid="bd4d083e-1f1f-471d-9dcd-670b5ea915a5"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVISO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="0" width="150" height="20" uuid="68d15012-4037-4250-8f6a-d50b17502a78"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA REALIZAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="0" width="104" height="20" uuid="82a634f1-91a1-4693-97c8-8ff0cfbe22ce"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="0" width="196" height="20" uuid="32623cb3-7144-4956-ad79-05fd7de1de6f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="503" y="0" width="306" height="20" uuid="bf7026d9-86ba-4b66-934e-bb82e8c65696"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIRURGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="809" y="0" width="241" height="20" uuid="48909c02-2933-4490-9c9a-2ef35c47d477"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANESTESIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1050" y="0" width="245" height="20" uuid="6b787d39-863b-478e-85e7-799e9a09165f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NATUREZA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1295" y="0" width="100" height="20" uuid="6da55133-8382-4e95-b0e9-9d03a9de86da"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1395" y="0" width="150" height="20" uuid="0152acf2-022f-41c6-abd4-8fed30d5aabc"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO CIRURGIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="53" height="20" uuid="4a3d74c9-50c7-4589-b0a5-59bf54e53a5c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AVISO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="53" y="0" width="150" height="20" uuid="2bdce6d8-ef25-441d-a66a-804ff874ce50"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_REALIZACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="0" width="104" height="20" uuid="ce0b870f-321f-496b-9f45-127b7386987a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="307" y="0" width="196" height="20" uuid="f60734e1-40d8-4c4d-9863-98de3e096bb4"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="503" y="0" width="306" height="20" uuid="4f2f086a-601b-4931-838f-b423379cc73b"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="809" y="0" width="241" height="20" uuid="bd9b34d4-b314-4f5a-af2d-ef399734cf05"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ANESTESIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1050" y="0" width="245" height="20" uuid="17177c0e-c337-4c54-92ec-5dd4d54689b6"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NATUREZA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1295" y="0" width="100" height="20" uuid="f1a9c2a6-3191-48f4-81ca-c9ed8279a418"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PORTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1395" y="0" width="150" height="20" uuid="e7ff2691-27e2-4944-b52f-dcbe3ff3eea5"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NC_TIPO_CIRURGIA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
