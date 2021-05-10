@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="prescricao_medica" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="1000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="ecb8ad84-4896-475b-8522-1e2713a6ea53">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT PM.CD_ATENDIMENTO ATENDIMENTO,
+       PAC.CD_PACIENTE   RH,
+       PAC.NM_PACIENTE   PACIENTE,
+       PM.DT_PRE_MED     DATA_PRESCRICAO,
+       P.NM_PRESTADOR    MEDICO,
+       E.DS_ESPECIALID   ESPECIALIDADE,
+       S.NM_SETOR        SETOR
+  FROM PRE_MED    PM,
+       PRESTADOR  P,
+       SETOR      S,
+       ATENDIME   A,
+       PACIENTE   PAC,
+       ESP_MED    EM,
+       ESPECIALID E
+ WHERE PM.DT_PRE_MED BETWEEN $P{data_inicial} AND $P{data_final}
+   AND PM.CD_PRESTADOR = P.CD_PRESTADOR
+   AND PM.CD_SETOR = S.CD_SETOR
+   AND PM.TP_PRE_MED = 'M'
+   AND PM.FL_IMPRESSO = 'S'
+   AND PM.CD_ATENDIMENTO = A.CD_ATENDIMENTO
+   AND A.CD_PACIENTE = PAC.CD_PACIENTE
+   AND EM.CD_ESPECIALID = E.CD_ESPECIALID
+   AND EM.CD_PRESTADOR = P.CD_PRESTADOR
+   AND EM.SN_ESPECIAL_PRINCIPAL = 'S'
+
+
+ ORDER BY 1, 3, 4]]>
+	</queryString>
+	<field name="ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="RH" class="java.math.BigDecimal"/>
+	<field name="PACIENTE" class="java.lang.String"/>
+	<field name="DATA_PRESCRICAO" class="java.sql.Timestamp"/>
+	<field name="MEDICO" class="java.lang.String"/>
+	<field name="ESPECIALIDADE" class="java.lang.String"/>
+	<field name="SETOR" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="79" height="20" uuid="5bc38ce5-f830-4605-808a-7947e3d9935f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="0" width="65" height="20" uuid="b5d3ea3e-0985-429b-a6c4-d6eebfa80589"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="0" width="222" height="20" uuid="3c3d317c-8115-46e5-9566-2df5eb79550f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="366" y="0" width="84" height="20" uuid="a20db584-510e-4214-a742-f6f661490a76"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATA PRESCRICAO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="210" height="20" uuid="7fb4a499-357c-4676-9247-c475b418ed9a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="0" width="165" height="20" uuid="7e70a718-b4c4-4edb-96d7-7ad1dcb4d0a2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESPECIALIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="825" y="0" width="175" height="20" uuid="56da20fc-d727-4220-9092-44541fd97cf7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SETOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="79" height="20" uuid="0ad5a079-2b22-47e9-bfb2-a4790ba59823"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="0" width="65" height="20" uuid="85a4b4aa-b37e-4ffd-ab25-7d247081f920"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="0" width="222" height="20" uuid="6e2f6109-d6fb-4bb3-8379-00fba65d0e28"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="366" y="0" width="84" height="20" uuid="6f8871d5-f57b-47bc-b55b-05c0fbbec883"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATA_PRESCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="210" height="20" uuid="27f51b54-26d1-4188-bddd-5faa52d88d2a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEDICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="0" width="165" height="20" uuid="04c613d1-c806-42ae-9184-3757a222bb2a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESPECIALIDADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="825" y="0" width="175" height="20" uuid="c48ea0b1-9390-498c-9999-8047ffbeef24"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

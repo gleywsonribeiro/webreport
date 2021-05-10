@@ -47,6 +47,14 @@ public class AuditoriaController {
         execute("/relatorios/auditoria/aval_score.jasper", "grau_complexidade.xls", parametros);
     }
     
+    public void prescricaoMedica() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("data_inicial", dataInicial);
+        parametros.put("data_final", dataFinal);
+
+        execute("/relatorios/auditoria/prescricao_medica.jasper", "prescricao_medica.xlsx", parametros);
+    }
+    
     private void execute(String caminho, String arquivoSaida, Map parametros) {
         try {
             ExecutorRelatorio executor = new ExecutorRelatorio(caminho,
