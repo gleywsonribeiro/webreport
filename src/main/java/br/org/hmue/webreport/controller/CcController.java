@@ -170,7 +170,7 @@ public class CcController {
     public void geraProcedimentos() {
         try {
             Map<String, Object> parametros = new HashMap<String, Object>();
-            parametros.put("data_inicio", dataInicial);
+            parametros.put("data_inicial", dataInicial);
             parametros.put("data_final", dataFinal);
             parametros.put("centro_cir", centro);
 
