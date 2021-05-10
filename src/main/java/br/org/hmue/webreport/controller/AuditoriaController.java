@@ -52,7 +52,7 @@ public class AuditoriaController {
         parametros.put("data_inicial", dataInicial);
         parametros.put("data_final", dataFinal);
 
-        execute("/relatorios/auditoria/prescricao_medica.jasper", "prescricao_medica.xlsx", parametros);
+        execute("/relatorios/auditoria/prescricao_medica.jasper", "prescricao_medica.xls", parametros);
     }
     
     private void execute(String caminho, String arquivoSaida, Map parametros) {
