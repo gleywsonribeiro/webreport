@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio glf" pageWidth="2820" pageHeight="595" orientation="Landscape" columnWidth="2820" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="af43af64-7513-4570-8e31-cc042cab0cfb">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="404"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="data_inicial" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -83,17 +83,6 @@
 	<field name="DS_MOT_ALT" class="java.lang.String"/>
 	<field name="IDADE" class="java.math.BigDecimal"/>
 	<field name="SEXO" class="java.lang.String"/>
-	<title>
-		<band height="20" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="361" height="20" forecolor="#006633" uuid="a647016d-04cf-4b96-8355-c3782bffc3f0"/>
-				<textElement verticalAlignment="Bottom">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[RELATÓRIO DE ATENDIMENTO AMBULATORIAL]]></text>
-			</staticText>
-		</band>
-	</title>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
@@ -287,7 +276,7 @@
 				<textElement verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$F{MÉDICO}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement x="1142" y="0" width="71" height="20" uuid="618acec0-146d-4b13-8ee9-8789bffa7f29"/>
 				<textElement verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$F{DT_ALTA}]]></textFieldExpression>
