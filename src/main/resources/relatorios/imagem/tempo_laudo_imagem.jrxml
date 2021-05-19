@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tempo_laudo_imagem" pageWidth="1800" pageHeight="595" orientation="Landscape" columnWidth="1800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="1b46cf51-950d-4a9c-b2f7-764c8b0faf9c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dt_ini_realizacao" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_fim_realizacao" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_ini_laudo" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dt_fim_laudo" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from vdic_tempo_laudos_rx
+where dt_realizado between $P{dt_ini_realizacao} and $P{dt_fim_realizacao}
+and dt_laudo  between $P{dt_ini_laudo} and $P{dt_fim_laudo}]]>
+	</queryString>
+	<field name="TP_ATENDIMENTO" class="java.lang.String"/>
+	<field name="CD_SET_EXA" class="java.math.BigDecimal"/>
+	<field name="NM_SET_EXA" class="java.lang.String"/>
+	<field name="CD_SETOR" class="java.math.BigDecimal"/>
+	<field name="NM_SETOR" class="java.lang.String"/>
+	<field name="CD_PACIENTE" class="java.math.BigDecimal"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="CD_PED_RX" class="java.math.BigDecimal"/>
+	<field name="DS_EXA_RX" class="java.lang.String"/>
+	<field name="DT_REALIZADO" class="java.sql.Timestamp"/>
+	<field name="DT_LAUDO" class="java.sql.Timestamp"/>
+	<field name="TEMPO" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="93" height="20" uuid="940fc44a-8f15-4817-9cee-e95e8ba8b448"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="93" y="0" width="162" height="20" uuid="3629457d-e38b-438e-ae5a-3c31bb36420f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Setor de Exame]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="0" width="286" height="20" uuid="c8f02ed0-4feb-4022-96af-8dcb780abe37"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Setor solicitante]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="541" y="0" width="75" height="20" uuid="83c614c8-b7bd-40b3-886b-ceec1b89f54e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="616" y="0" width="249" height="20" uuid="1c7b5a55-2b16-4e87-841c-7699f38f0db3"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="865" y="0" width="153" height="20" uuid="84fae016-ad8f-4ab8-b658-68f4287c0998"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1018" y="0" width="82" height="20" uuid="58c6ea88-11db-45d4-b253-b7d0aa7c5b84"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1100" y="0" width="216" height="20" uuid="8a1c5d8b-20aa-482e-9d8f-1188212e1256"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Exame]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1316" y="0" width="153" height="20" uuid="20fb9ea1-5d66-4729-ba89-1699a0dce556"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Realização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1469" y="0" width="153" height="20" uuid="be37616d-4c91-4456-96b4-af95c44ee19a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Laudo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1622" y="0" width="69" height="20" uuid="d765d26c-2cc0-40d4-8041-d0bcc7e7a2ad"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tempo (horas)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="93" height="20" uuid="c3aa78c4-1143-4693-b08f-e082c623fd58"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TP_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="93" y="0" width="162" height="20" uuid="4e683fe3-e594-4bf6-bebf-e322701665d2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_SET_EXA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="286" height="20" uuid="85c25ce4-103b-4fe4-84c0-8c9f9548e918"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="541" y="0" width="75" height="20" uuid="23b049ad-7566-4f91-95e7-82dd3b48b732"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="0" width="249" height="20" uuid="6a82466e-c399-45f4-8833-cf1770bc21b7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="865" y="0" width="153" height="20" uuid="f6f90831-b0fa-49f2-8dce-686493eaa4a5"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1018" y="0" width="82" height="20" uuid="d848a463-1cc7-4e13-a7b9-ceb00a436554"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_PED_RX}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1100" y="0" width="216" height="20" uuid="0d293270-5910-40cd-be15-9ef6274651f9"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DS_EXA_RX}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="1316" y="0" width="153" height="20" uuid="18fc4230-22a6-4fd5-bcde-2c6de66e5b4c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_REALIZADO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="1469" y="0" width="153" height="20" uuid="8efd2e76-91a7-40cd-857a-93d9baecf914"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_LAUDO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

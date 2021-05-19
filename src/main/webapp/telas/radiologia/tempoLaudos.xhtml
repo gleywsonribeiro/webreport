@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+
+
+    <ui:define name="content">
+        <h:form>
+            <div class="card card-w-title">
+                <h1>Relatório de Tempo de Laudos</h1>
+                <p:messages autoUpdate="true" closable="true"/>
+                <p:fieldset legend="Período da Realização" style="width: auto">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank grid-pad">
+                        <p:outputLabel for="inreal" value="Data Inicial" />
+                        <p:calendar id="inreal" mask="true" pattern="dd/MM/yyyy" required="true"
+                                    navigator="true"
+                                    locale="pt" value="#{imagemController.dataInicial}"/>
+
+
+                        <p:outputLabel for="fimreal" value="Data Final" />
+                        <p:calendar id="fimreal" mask="true" pattern="dd/MM/yyyy" required="true"
+                                    navigator="true"
+                                    locale="pt" value="#{imagemController.dataFinal}"/>
+
+                    </p:panelGrid>
+
+
+                </p:fieldset>
+
+                <p:fieldset legend="Período do Laudo" style="width: auto">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank grid-pad">
+                        <p:outputLabel for="inlaudo" value="Data Inicial" />
+                        <p:calendar id="inlaudo" mask="true" pattern="dd/MM/yyyy" required="true"
+                                    navigator="true"
+                                    locale="pt" value="#{imagemController.dataLaudoInicial}"/>
+
+
+                        <p:outputLabel for="fimlaudo" value="Data Final" />
+                        <p:calendar id="fimlaudo" mask="true" pattern="dd/MM/yyyy" required="true"
+                                    navigator="true"
+                                    locale="pt" value="#{imagemController.dataLaudoFinal}"/>
+
+                    </p:panelGrid>
+                </p:fieldset>
+                <p:commandButton value="Gerar Relatorio" ajax="false" action="#{imagemController.tempoLaudoToExcel()}" style="margin-top: 30px"/>
+            </div>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>
