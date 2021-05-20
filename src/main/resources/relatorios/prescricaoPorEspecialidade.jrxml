@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="prescricaoPorEspecialidade" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="bf167994-51b1-4edf-bb91-2405d7f5caba">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="prescricaoPorEspecialidade" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="bf167994-51b1-4edf-bb91-2405d7f5caba">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -37,44 +37,33 @@
 	<field name="DS_ESPECIALID" class="java.lang.String"/>
 	<field name="NM_SETOR" class="java.lang.String"/>
 	<field name="TOTAL" class="java.math.BigDecimal"/>
-	<title>
-		<band height="51" splitType="Stretch">
-			<staticText>
-				<reportElement x="269" y="13" width="267" height="38" forecolor="#006633" uuid="1e695661-db65-4628-bd8e-3d12316e4c16"/>
-				<textElement textAlignment="Center">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[TOTAL DE PRESCRIÇÕES POR PRESTADOR]]></text>
-			</staticText>
-		</band>
-	</title>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="269" height="20" forecolor="#006666" uuid="fe36447d-884a-4cfc-8a4e-de68e96846da"/>
-				<textElement>
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[PRESTADOR]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="269" y="0" width="184" height="20" forecolor="#006666" uuid="c1cc08e9-1506-43eb-8061-1ad4fc38fc38"/>
-				<textElement>
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[ESPECIALIDADE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="453" y="0" width="211" height="20" forecolor="#006666" uuid="bda14bcf-246b-4563-a0d2-d800bc3a0fa4"/>
-				<textElement>
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[SETOR]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="664" y="0" width="138" height="20" forecolor="#006666" uuid="6810c42f-b3da-4322-a393-ac262a1434d1"/>
-				<textElement textAlignment="Center">
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[TOTAL PRESC.]]></text>
 			</staticText>
@@ -84,19 +73,30 @@
 		<band height="20" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="269" height="20" uuid="51953bf0-e6a2-4ed8-b4d8-64bb20c50ef4"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{NM_PRESTADOR}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="269" y="0" width="184" height="20" uuid="3eeff04d-c00d-4a2e-9c73-d05703e28f54"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{DS_ESPECIALID}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="453" y="0" width="211" height="20" uuid="afb44783-810e-4922-a963-affaf9c72a5d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{NM_SETOR}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="664" y="0" width="138" height="20" uuid="71a2b470-fa28-4c8c-b486-f747ad0a71ee"/>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
 			</textField>
 		</band>

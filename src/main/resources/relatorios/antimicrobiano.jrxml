@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="microbiano" pageWidth="1200" pageHeight="595" orientation="Landscape" columnWidth="1160" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="98bef146-ca3e-4226-8b5a-62b4821483f6">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="microbiano" pageWidth="1160" pageHeight="555" orientation="Landscape" columnWidth="1160" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="98bef146-ca3e-4226-8b5a-62b4821483f6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -36,72 +36,61 @@
 	<field name="DS_TIP_PRESC" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="QTD" class="java.math.BigDecimal"/>
-	<title>
-		<band height="42" splitType="Stretch">
-			<staticText>
-				<reportElement x="430" y="0" width="339" height="18" forecolor="#006600" uuid="8059c99a-f7cf-4697-ac6d-b07a35c8a00b"/>
-				<textElement textAlignment="Center">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[RELATÓRIO DE ANTIMICROBIANO]]></text>
-			</staticText>
-		</band>
-	</title>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="95" height="20" forecolor="#006666" uuid="d67fd99c-ae1c-450e-8432-c2fdd5b441a0"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[DATA PRESC]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="95" y="0" width="95" height="20" forecolor="#006666" uuid="f6447bd6-187d-4aff-aeba-9c9357440e9f"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[COD PACIENTE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="190" y="0" width="272" height="20" forecolor="#006666" uuid="e6694b17-5fb2-4f6e-aef8-3ec55d92bea4"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PACIENTE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="462" y="0" width="91" height="20" forecolor="#006666" uuid="2b8eef1a-b8cd-4922-b4e4-5a6f3ab523ba"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[COD PRESC]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="553" y="0" width="92" height="20" forecolor="#006666" uuid="ae259168-4f53-4fbd-9166-f1127213b0f8"/>
-				<textElement textAlignment="Center">
-					<font isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[COD ITEM]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="645" y="0" width="376" height="20" forecolor="#006666" uuid="3881be36-d550-489b-b5e0-1327fc358550"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ITEM PRESCRIÇÃO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1021" y="0" width="69" height="20" forecolor="#006666" uuid="5cc10fae-f0e3-477f-877e-eba57754ba10"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[TIPO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1090" y="0" width="69" height="20" forecolor="#006666" uuid="3d2cbd7d-0766-40b1-9294-01763f81add4"/>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[QTD]]></text>
 			</staticText>
@@ -111,35 +100,58 @@
 		<band height="20" splitType="Stretch">
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="0" y="0" width="95" height="20" uuid="89bc76e8-f3a3-4f17-9c79-0ab77a2ded5f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{DT_PRE_MED}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="95" y="0" width="95" height="20" uuid="ab22b3d6-8978-438d-851c-bb45a5be9a68"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{CD_PACIENTE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="190" y="0" width="272" height="20" uuid="7722e5ee-fab2-4bd2-bab4-e309d60c1485"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="462" y="0" width="91" height="20" uuid="0fca45c4-96fa-43f9-ba88-bb7cb413a280"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{CD_PRE_MED}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="553" y="0" width="92" height="20" uuid="e015b4c3-8471-4130-8971-52f5b4ebae61"/>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{ITEM}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="645" y="0" width="376" height="20" uuid="9ad91ac5-92c0-4add-9fcc-3ba645d2f50d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{DS_TIP_PRESC}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="1021" y="0" width="69" height="20" uuid="ed0b7900-158f-4d72-9291-8a933418b2c3"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="1090" y="0" width="69" height="20" uuid="303950c8-4361-42a3-b95f-e6522c055557"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{QTD}]]></textFieldExpression>
 			</textField>
 		</band>
