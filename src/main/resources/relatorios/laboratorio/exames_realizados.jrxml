@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="exames_realizados" pageWidth="1100" pageHeight="555" orientation="Landscape" columnWidth="1100" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="2f701088-b809-47c5-bf62-24ef2d763519">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT P.CD_PACIENTE RH,
+       P.NM_PACIENTE PACIENTE,
+       PL.CD_ATENDIMENTO ATENDIMENTO,
+       PL.CD_PED_LAB PEDIDO,
+       S.NM_SETOR SETOR,
+       TRUNC(PL.DT_PEDIDO) "DATA PEDIDO",
+       EL.NM_EXA_LAB EXAME
+  FROM PED_LAB PL,
+       ATENDIME A,
+       PACIENTE P,
+       SETOR S,
+       ITPED_LAB IPL,
+       EXA_LAB EL
+ WHERE PL.CD_ATENDIMENTO = A.CD_ATENDIMENTO
+   AND A.CD_PACIENTE = P.CD_PACIENTE
+   AND PL.CD_PED_LAB = IPL.CD_PED_LAB
+   AND S.CD_SETOR = PL.CD_SETOR
+   AND IPL.SN_REALIZADO = 'S'
+   AND IPL.CD_EXA_LAB = EL.CD_EXA_LAB
+   AND PL.DT_PEDIDO BETWEEN $P{data_inicial} AND $P{data_final}]]>
+	</queryString>
+	<field name="RH" class="java.math.BigDecimal"/>
+	<field name="PACIENTE" class="java.lang.String"/>
+	<field name="ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="PEDIDO" class="java.math.BigDecimal"/>
+	<field name="SETOR" class="java.lang.String"/>
+	<field name="DATA PEDIDO" class="java.sql.Timestamp"/>
+	<field name="EXAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="63" height="20" uuid="c6aa2c7f-2743-4f38-9c76-858b8748707e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="0" width="265" height="20" uuid="95b64853-6ee5-44a0-87d7-178a8eee1e6d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PACIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="328" y="0" width="87" height="20" uuid="877c32ce-f940-4dc7-a2fe-4ae0853b200a"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ATENDIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="0" width="73" height="20" uuid="39e1f3dc-b865-444f-8a10-546e11bc9b52"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="488" y="0" width="182" height="20" uuid="b7dc43b0-9c0e-4012-85fc-37f4c42590ca"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[SETOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="670" y="0" width="87" height="20" uuid="455301cc-d0c8-483d-a7fb-b60a14939c76"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DATA PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="757" y="0" width="343" height="20" uuid="0e86a11f-076f-4455-b64d-cafd124db941"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[EXAME]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="###0">
+				<reportElement x="0" y="0" width="63" height="20" uuid="d4fa2bd6-8337-4bb9-86f6-74d0c79fa0ed"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{RH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="0" width="265" height="20" uuid="93b08bee-fffb-4211-b69f-ea3f0513e2b2"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="328" y="0" width="87" height="20" uuid="c32c5c49-423c-4026-8b95-5bea6f729b40"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="415" y="0" width="73" height="20" uuid="5a2e6b55-3274-4220-aa66-f5383997961d"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{PEDIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="488" y="0" width="182" height="20" uuid="2e5ebb18-2d6f-4cc2-8dad-e395e3cfe9f0"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{SETOR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="670" y="0" width="87" height="20" uuid="357bfa57-690b-447b-9a96-42045bee2411"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{DATA PEDIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="757" y="0" width="343" height="20" uuid="31aa7efa-dfb5-4849-ad7a-5354ace781c7"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{EXAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

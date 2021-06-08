@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="meta_clinica" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="715c5829-4a75-40c4-8d1a-f286a21f2708">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mes_ano" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM (
+
+SELECT A.CD_ATENDIMENTO,
+       A.DT_ATENDIMENTO,
+       CASE
+         WHEN A.DT_ALTA IS NULL THEN
+          TRUNC(SYSDATE)
+         ELSE
+          A.DT_ALTA
+       END DT_ALTA,
+       PD.DS_PERGUNTA,
+       RR.DS_RESPOSTA
+  FROM REGISTRO_DOCUMENTO RD,
+       ATENDIME A,
+       (SELECT RD.CD_ATENDIMENTO,
+               MAX(RD.CD_REGISTRO_DOCUMENTO) CD_REGISTRO_DOCUMENTO
+          FROM REGISTRO_DOCUMENTO RD
+         WHERE RD.CD_DOCUMENTO = 20
+         GROUP BY RD.CD_ATENDIMENTO
+         ORDER BY RD.CD_ATENDIMENTO) VM,
+       REGISTRO_RESPOSTA RR,
+       PERGUNTA_DOC PD
+ WHERE A.CD_ATENDIMENTO = RD.CD_ATENDIMENTO
+   AND VM.CD_ATENDIMENTO = A.CD_ATENDIMENTO
+   AND VM.CD_REGISTRO_DOCUMENTO = RD.CD_REGISTRO_DOCUMENTO
+   AND RR.CD_REGISTRO_DOCUMENTO = RD.CD_REGISTRO_DOCUMENTO
+   AND RR.CD_PERGUNTA_DOC = PD.CD_PERGUNTA_DOC
+   AND PD.CD_PERGUNTA_DOC IN (17762, 17663)
+   AND RD.CD_DOCUMENTO = 20
+   --AND RD.CD_ATENDIMENTO = 585661
+   AND TO_CHAR(A.DT_ATENDIMENTO, 'MM/YYYY') = $P{mes_ano}
+ ORDER BY RD.CD_ATENDIMENTO
+
+ ) PIVOT(MAX(DS_RESPOSTA) FOR DS_PERGUNTA IN ('DAS_CLASS' AS CLASSIFICACAO, 'META_CLIN' AS META_CLINICA ) )
+
+]]>
+	</queryString>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="DT_ATENDIMENTO" class="java.sql.Timestamp"/>
+	<field name="DT_ALTA" class="java.sql.Timestamp"/>
+	<field name="CLASSIFICACAO" class="java.lang.String"/>
+	<field name="META_CLINICA" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="160" height="20" uuid="5f2a2c95-e1a6-485e-b657-66eef72b6f52"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8"/>
+				</textElement>
+				<text><![CDATA[Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="160" height="20" uuid="86a1e2ed-9e1c-4cb3-bb62-9deb15d8c37d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8"/>
+				</textElement>
+				<text><![CDATA[Data Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="160" height="20" uuid="77b24c49-91e5-4cf6-9d2d-871c93f4fac6"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8"/>
+				</textElement>
+				<text><![CDATA[Data de Alta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="160" height="20" uuid="59bd9614-dce5-48ad-9160-ca99ebad828c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8"/>
+				</textElement>
+				<text><![CDATA[Classificação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="640" y="0" width="160" height="20" uuid="f6ad959e-4cc8-4629-8556-5aa021fb0b69"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial Black" size="8"/>
+				</textElement>
+				<text><![CDATA[Meta Clínica]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="20" uuid="9eb03c52-a7bd-49bc-a808-f8d9d667aa64"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="160" y="0" width="160" height="20" uuid="a3323f48-cb53-4a6f-a383-b7d25841439c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="320" y="0" width="160" height="20" uuid="6b326158-dd35-42b0-88ef-462565866bd9"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_ALTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="160" height="20" uuid="a0b9d441-31bb-4fb2-bb90-9e59d3345137"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLASSIFICACAO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="640" y="0" width="160" height="20" uuid="e6ff4a86-584d-407f-a5ea-771314685db0"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{META_CLINICA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

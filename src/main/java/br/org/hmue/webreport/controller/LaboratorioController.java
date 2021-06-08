@@ -36,6 +36,7 @@ public class LaboratorioController {
     
     private Date dataInicial;
     private Date dataFinal;
+    private String mesAno;
     
     
     public void tempoExameToExcel() {
@@ -44,6 +45,14 @@ public class LaboratorioController {
         parametros.put("data_final", dataFinal);
 
         execute("/relatorios/laboratorio/exames_urgentes.jasper", "exames_urgentes.xls", parametros);
+    }
+
+    public void exames() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("data_inicial", dataInicial);
+        parametros.put("data_final", dataFinal);
+
+        execute("/relatorios/laboratorio/exames_realizados.jasper", "exames.xls", parametros);
     }
     
     private void execute(String caminho, String arquivoSaida, Map parametros) {
@@ -82,7 +91,12 @@ public class LaboratorioController {
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
-    
-    
-    
+
+    public String getMesAno() {
+        return mesAno;
+    }
+
+    public void setMesAno(String mesAno) {
+        this.mesAno = mesAno;
+    }
 }

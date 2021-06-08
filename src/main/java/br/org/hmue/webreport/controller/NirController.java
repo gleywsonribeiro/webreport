@@ -35,17 +35,30 @@ public class NirController {
     private HttpServletResponse response;
 
     private String codigo;
+    private String mesAno;
 
     public void censoPorSetor() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+
+        if (codigo.isEmpty()) {
+            execute("/relatorios/nir/censo.jasper", "censo.xls", parametros);
+        } else {
+            parametros.put("codigo", codigo);
+            execute("relatorios/nir/cesnso_setor.jasper", "censo_por_setor.xls", parametros);
+        }
+    }
+
+
+    public void metaClinica() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("mes_ano", mesAno);
+        execute("/relatorios/nir/meta_clinica.jasper", "meta_clinica.xls", parametros);
+    }
+
+    private void execute(String caminho, String arquivoSaida, Map parametros) {
         try {
-            Map<String, Object> parametros = new HashMap<String, Object>();
-            ExecutorRelatorio executor = null;
-            if (codigo.isEmpty()) {
-                executor = new ExecutorRelatorio("/relatorios/nir/censo.jasper", this.response, parametros, "censo.xls");
-            } else {
-                parametros.put("codigo", codigo);
-                executor = new ExecutorRelatorio("/relatorios/nir/censo_setor.jasper", this.response, parametros, "censo_por_setor.xls");
-            }
+            ExecutorRelatorio executor = new ExecutorRelatorio(caminho,
+                    this.response, parametros, arquivoSaida);
 
             Connection connection = ConnectionFactory.createConnectionToOracle();
 
@@ -58,8 +71,16 @@ public class NirController {
             }
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(NirController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SppController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getMesAno() {
+        return mesAno;
+    }
+
+    public void setMesAno(String mesAno) {
+        this.mesAno = mesAno;
     }
 
     public String getCodigo() {
