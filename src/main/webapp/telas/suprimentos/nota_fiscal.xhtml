@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    
+
+    <ui:define name="content">
+        <h:form>
+            <div class="card card-w-title">
+                <h1>Relatório de Notas Fiscais</h1>
+                <p:messages autoUpdate="true" closable="true"/>
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="inicio" value="Início" />
+                    <p:calendar id="inicio" showOn="button" pattern="dd/MM/yyyy" value="#{suprimentoController.dataInicial}"
+                                required="true" requiredMessage="Por favor, escolha a data inicial" locale="pt"/>
+
+                    <p:outputLabel for="fim" value="Fim" />
+                    <p:calendar id="fim" showOn="button" pattern="dd/MM/yyyy" value="#{suprimentoController.dataFinal}"
+                                required="true" requiredMessage="Por favor, escolha a data final" locale="pt"/>
+                    <p:spacer/>
+                    <p:commandButton value="Gerar Relatório" ajax="false" action="#{suprimentoController.geraNotasFiscais()}"/>
+                </h:panelGrid>
+            </div>
+            
+            
+        </h:form>
+    </ui:define>
+
+</ui:composition>
