@@ -47,15 +47,15 @@ public class SppController {
 
     public void altasToExcel() {
         Map<String, Object> parametros = new HashMap<String, Object>();
-        parametros.put("date_inicial", dataInicial);
-        parametros.put("date_final", dataFinal);
+        parametros.put("data_inicial", dataInicial);
+        parametros.put("data_final", dataFinal);
         getReport("/relatorios/spp/saidas.jasper", parametros, "saidas.xls");
     }
 
     public void fauToExcel() {
         Map<String, Object> parametros = new HashMap<String, Object>();
-        parametros.put("date_inicial", dataInicial);
-        parametros.put("date_final", dataFinal);
+        parametros.put("data_inicial", dataInicial);
+        parametros.put("data_final", dataFinal);
 
         getReport("/relatorios/spp/fau.jasper", parametros, "fau.xls");
     }
