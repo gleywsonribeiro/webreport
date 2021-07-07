@@ -121,13 +121,6 @@
 				<text><![CDATA[Espécie]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1577" y="0" width="85" height="20" uuid="423cfbe4-a85b-4ef3-a7d3-8361895b61ba"/>
-				<textElement verticalAlignment="Bottom">
-					<font fontName="Arial Black" size="8"/>
-				</textElement>
-				<text><![CDATA[OC]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="0" y="0" width="87" height="20" uuid="901d4692-2ed2-4402-be12-f463b945d89f"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Arial Black" size="8"/>
@@ -207,13 +200,6 @@
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DS_ESPECIE}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="1577" y="0" width="85" height="20" uuid="a0ec066d-4e0e-4c06-aa9a-3dd05efadd6c"/>
-				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ORDEM_COMPRA}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="87" height="20" uuid="5c5f14ca-d24a-4a65-8680-a87e714b6cf7"/>

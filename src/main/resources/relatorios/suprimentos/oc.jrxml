@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="oc" pageWidth="1200" pageHeight="572" orientation="Landscape" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="4eafc382-119b-49b3-b363-fd33d15d4597">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="oc" pageWidth="1250" pageHeight="572" orientation="Landscape" columnWidth="1250" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="4eafc382-119b-49b3-b363-fd33d15d4597">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -16,10 +16,11 @@
        UP.DS_UNIDADE,
        IP.QT_COMPRADA,
        OC.CD_ORD_COM,
+       OC.CD_SOL_COM SOLICITACAO,
        P.DS_PRODUTO,
        IP.VL_UNITARIO,
        IP.VL_TOTAL,
-       IP.QT_RECEBIDA
+       IP.QT_COMPRADA QT_RECEBIDA
   FROM ORD_COM OC, FORNECEDOR F, ITORD_PRO IP, PRODUTO P, UNI_PRO UP
  WHERE F.CD_FORNECEDOR = OC.CD_FORNECEDOR
    AND OC.TP_ORD_COM = 'P' --PRODUTO
@@ -34,6 +35,7 @@
 	<field name="DS_UNIDADE" class="java.lang.String"/>
 	<field name="QT_COMPRADA" class="java.math.BigDecimal"/>
 	<field name="CD_ORD_COM" class="java.math.BigDecimal"/>
+	<field name="SOLICITACAO" class="java.math.BigDecimal"/>
 	<field name="DS_PRODUTO" class="java.lang.String"/>
 	<field name="VL_UNITARIO" class="java.math.BigDecimal"/>
 	<field name="VL_TOTAL" class="java.math.BigDecimal"/>
@@ -43,72 +45,79 @@
 			<staticText>
 				<reportElement x="0" y="0" width="219" height="20" uuid="9ed6bc32-f196-4118-9675-041f2fd43456"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fornecedor]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="219" y="0" width="93" height="20" uuid="fb4103ca-aa84-4984-abb8-f2a374396fed"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Data Preveista]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="312" y="0" width="77" height="20" uuid="bd2ee368-0a96-4a73-8e1d-99e9fc962a64"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cod. Produto MV]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="389" y="0" width="126" height="20" uuid="b46cd3f9-df22-44c2-8f47-9338ac8b8b87"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Unidade]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="515" y="0" width="81" height="20" uuid="1b801e50-db8d-4d60-add2-30ded266222d"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qtde Comprada]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="596" y="0" width="83" height="20" uuid="25b5a663-0141-4ee8-b9f6-2e8f6d54197b"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ordem de Compra]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="679" y="0" width="229" height="20" uuid="9f3b8225-c7af-4517-b83b-99d2b0719fd3"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Produto]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="908" y="0" width="79" height="20" uuid="4e1944e9-8ea6-4575-afb9-d328ef93d1b4"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Valor unitáio]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="987" y="0" width="76" height="20" uuid="a8c5cae8-4f66-42d4-95ad-11a904611186"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Valor total]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1063" y="0" width="74" height="20" uuid="26f3a118-29f2-482e-98ab-aa6e8b711fbe"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qtde Recebida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1137" y="0" width="100" height="20" uuid="ecc9c9a3-14f4-4438-ac5a-fba9b764c375"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitação]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -117,72 +126,79 @@
 			<textField>
 				<reportElement x="0" y="0" width="219" height="20" uuid="a57e6c3f-9371-46c8-9517-973c5da4ff29"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NM_FORNECEDOR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="219" y="0" width="93" height="20" uuid="8d99a84a-6186-4b7c-ace2-614d2718b327"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DT_PREV_ENTREGA}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="312" y="0" width="77" height="20" uuid="31313360-19cd-4d35-8487-0011aef30183"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CD_PRODUTO}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="389" y="0" width="126" height="20" uuid="8d42aa27-5212-442c-9b25-049d5b870ef2"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DS_UNIDADE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="515" y="0" width="81" height="20" uuid="f99df13f-83c1-4bcb-87e0-b78078690374"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QT_COMPRADA}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="596" y="0" width="83" height="20" uuid="22fd4bb7-c821-4ac8-ba52-17d005b9ecb5"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CD_ORD_COM}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="679" y="0" width="229" height="20" uuid="77cb8a6b-6982-4e0a-ab1f-050665e889d7"/>
 				<textElement verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DS_PRODUTO}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="908" y="0" width="79" height="20" uuid="9f91fa2c-0e89-4bec-a603-69b3e68af97b"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{VL_UNITARIO}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="987" y="0" width="76" height="20" uuid="a23d9d22-5619-41d7-a6eb-c97416c1006a"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{VL_TOTAL}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="1063" y="0" width="74" height="20" uuid="70100596-fe91-48b4-8e07-8271ca4943b0"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QT_RECEBIDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1137" y="0" width="100" height="20" uuid="b20371c9-97b1-46e0-a78d-5fefaeafd14a"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SOLICITACAO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
