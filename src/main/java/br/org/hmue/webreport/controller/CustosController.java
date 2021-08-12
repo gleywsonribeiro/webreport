@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Named(value = "custoscontroller")
 @RequestScoped
-public class Custoscontroller {
+public class CustosController {
 
     @Inject
     private FacesContext facesContext;
@@ -37,7 +37,7 @@ public class Custoscontroller {
     private String mes;
     private String ano;
     
-    public Custoscontroller() {
+    public CustosController() {
     }
 
     

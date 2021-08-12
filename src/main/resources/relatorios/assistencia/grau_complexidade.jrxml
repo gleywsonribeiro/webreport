@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="grau_complexidade" pageWidth="1200" pageHeight="555" orientation="Landscape" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="ed5f34b3-cf5b-40fa-b7fd-cb79c5624125">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="mes_ano" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT UI.DS_UNID_INT,
+       L.DS_RESUMO,
+       P.CD_PACIENTE,
+       P.NM_PACIENTE,
+       P.DT_NASCIMENTO,
+       TO_CHAR(TRUNC(A.DH_AVALIACAO), 'DD') DT_AVALIACAO,
+       TO_CHAR(TRUNC(A.DH_AVALIACAO), 'MM/YYYY') MES_ANO,
+       CASE
+         WHEN A.VL_RESULTADO BETWEEN '12' AND '17' THEN
+          'CUIDADO MINIMO'
+         when A.VL_RESULTADO BETWEEN '18' AND '22' THEN
+          'CUIDAO INTERMEDIARIO'
+         when A.VL_RESULTADO BETWEEN '23' AND '28' THEN
+          'CUIDADO ALTA DEPENDECIA'
+         when A.VL_RESULTADO BETWEEN '29' AND '34' THEN
+          'CUIDADO SEMI-INTENSIVO'
+         when A.VL_RESULTADO > 34 THEN
+          'CUIDADO INTENSIVO'
+       END CUIDADOS,
+       A.CD_AVALIACAO,
+       A.CD_FORMULA,
+       U.NM_USUARIO,
+       A.VL_RESULTADO,
+       A.CD_ATENDIMENTO
+  FROM PAGU_AVALIACAO A,
+       (SELECT DT_AVALIACAO,
+               CD_ATENDIMENTO,
+               MAX(CD_AVALIACAO) CD_MAX_AVALIACAO
+          FROM (SELECT TRUNC(A.DH_AVALIACAO) DT_AVALIACAO,
+                       A.CD_AVALIACAO,
+                       A.CD_FORMULA,
+                       A.NM_USUARIO,
+                       A.VL_RESULTADO,
+                       A.CD_ATENDIMENTO
+                  FROM PAGU_AVALIACAO A
+                 WHERE A.CD_FORMULA = 31)
+         GROUP BY DT_AVALIACAO, CD_ATENDIMENTO) V_MAX,
+       PACIENTE P,
+       ATENDIME ATE,
+       DBASGU.USUARIOS U,
+       LEITO L,
+       UNID_INT UI
+ WHERE A.CD_FORMULA = 31
+   AND V_MAX.CD_MAX_AVALIACAO = A.CD_AVALIACAO
+   AND ATE.CD_ATENDIMENTO = A.CD_ATENDIMENTO
+   AND P.CD_PACIENTE = ATE.CD_PACIENTE
+   AND U.CD_USUARIO = A.NM_USUARIO
+   AND L.CD_LEITO = ATE.CD_LEITO
+   AND UI.CD_UNID_INT = L.CD_UNID_INT
+   AND TO_CHAR(TRUNC(A.DH_AVALIACAO), 'MM/YYYY') = $P{mes_ano}]]>
+	</queryString>
+	<field name="DS_UNID_INT" class="java.lang.String"/>
+	<field name="DS_RESUMO" class="java.lang.String"/>
+	<field name="CD_PACIENTE" class="java.math.BigDecimal"/>
+	<field name="NM_PACIENTE" class="java.lang.String"/>
+	<field name="DT_NASCIMENTO" class="java.sql.Timestamp"/>
+	<field name="DT_AVALIACAO" class="java.lang.String"/>
+	<field name="MES_ANO" class="java.lang.String"/>
+	<field name="CUIDADOS" class="java.lang.String"/>
+	<field name="CD_AVALIACAO" class="java.math.BigDecimal"/>
+	<field name="CD_FORMULA" class="java.math.BigDecimal"/>
+	<field name="NM_USUARIO" class="java.lang.String"/>
+	<field name="VL_RESULTADO" class="java.math.BigDecimal"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="213" height="20" uuid="fa1ffa2b-0b26-458f-8044-98636bc2d96b"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Unidade de Internação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="0" width="87" height="20" uuid="c57225bb-a159-456c-8edf-ec32571777ac"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Leito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="86" height="20" uuid="d7cb291f-46c1-457b-90a7-828a525d5547"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="0" width="259" height="20" uuid="b390cc35-f49e-498a-a832-1d25e250f6ec"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="645" y="0" width="97" height="20" uuid="0cea3c40-7abc-4c18-9667-d6bd452180c3"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Dia da Avaliação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="742" y="0" width="220" height="20" uuid="c8edbb0e-e577-4695-91bc-c57e4d02278c"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Conduta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="962" y="0" width="138" height="20" uuid="52f2579f-28f5-4a22-ac94-f0a26cb51557"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[Score]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1100" y="0" width="100" height="20" uuid="f73004da-b539-4f47-bea0-e353d80dd267"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Atendimento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="213" height="20" uuid="f34f2401-c21d-4473-bd4b-a50626962923"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DS_UNID_INT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="213" y="0" width="87" height="20" uuid="f9d02fca-afe7-4e6d-b99f-a05346dd1c0e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DS_RESUMO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="86" height="20" uuid="98fb0e22-bfc9-40a7-ad2a-dae96b174e5f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="386" y="0" width="259" height="20" uuid="1df6ad1f-5823-48ba-bd72-726d56cbbc35"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="645" y="0" width="97" height="20" uuid="08fce0ec-7006-4026-afd1-7d1da43177f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_AVALIACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="742" y="0" width="220" height="20" uuid="cd16c8d7-b73a-4d36-8aed-57290b031bfe"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUIDADOS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="962" y="0" width="138" height="20" uuid="bdac1d7e-bd96-4516-a754-ff0da9ead869"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VL_RESULTADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1100" y="0" width="100" height="20" uuid="a4ac1054-60c5-4b96-9d05-f70c46590154"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
