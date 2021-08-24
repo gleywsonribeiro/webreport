@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="limpeza_leitos" pageWidth="1200" pageHeight="802" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="bb061609-3017-4516-bf4b-012276224476">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from VDIC_HIGIENIZACAO_LEITOS
+where trunc(dt_solicitado) between $P{data_inicial} and $P{data_final}]]>
+	</queryString>
+	<field name="SOLICITACAO" class="java.math.BigDecimal"/>
+	<field name="CD_MOV_INT" class="java.math.BigDecimal"/>
+	<field name="SETOR" class="java.lang.String"/>
+	<field name="RESUMO" class="java.lang.String"/>
+	<field name="TP_LIMPEZA" class="java.lang.String"/>
+	<field name="DT_SOLICITADO" class="java.sql.Timestamp"/>
+	<field name="TP_SOLICITACAO" class="java.lang.String"/>
+	<field name="TP_SITUACAO" class="java.lang.String"/>
+	<field name="DT_REALIZADO" class="java.sql.Timestamp"/>
+	<field name="OBSERVACAO" class="java.lang.String"/>
+	<field name="DURACAO" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="79" height="20" uuid="4198597f-0257-4808-8925-822429ddea9f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="0" width="261" height="20" uuid="c03b6356-287f-43ed-947b-7eea5a833dc2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Setor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="70" height="20" uuid="27e3c568-ec04-4920-9663-fc415afef223"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="120" height="20" uuid="e4eeac75-b4a0-420f-a7f3-1b04e21e43f3"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo  de Limpeza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="530" y="0" width="120" height="20" uuid="3dfd31e6-6b4d-402c-913f-eb0d4cef5df8"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data da Solicitação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="0" width="120" height="20" uuid="9123fa9e-f104-4da7-842e-8e25caf05baa"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Solcitação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="770" y="0" width="120" height="20" uuid="742c90de-f89f-4dda-a030-1cdc925f7d5e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="890" y="0" width="120" height="20" uuid="f7f02e6e-b5ad-436a-9a12-bd9efc2d52b8"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Realização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1010" y="0" width="120" height="20" uuid="c966e7d1-b5af-412d-b662-3e79169e1a3e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Observação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1130" y="0" width="70" height="20" uuid="63cff2ab-acb3-4d38-b71a-46ddede9ef68"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Duração]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="79" height="20" uuid="da211b74-5f29-44ec-8f91-16955406a1c3"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SOLICITACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="0" width="261" height="20" uuid="e20fd0c7-7b46-4c2e-85cf-4a40ae3486c9"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SETOR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="340" y="0" width="70" height="20" uuid="0d0aaa62-e2a6-4a75-8aeb-fd877b7bb954"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RESUMO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="0" width="120" height="20" uuid="2c141a30-fa1a-456c-ac2e-47dee3c4c892"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TP_LIMPEZA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="530" y="0" width="120" height="20" uuid="59ba6954-f756-4e61-bf3d-c13c75662225"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_SOLICITADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="650" y="0" width="120" height="20" uuid="4de21356-f205-45e6-85f9-543705545d54"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TP_SOLICITACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="770" y="0" width="120" height="20" uuid="5bd5c067-b144-4ad7-85a2-f98c7a8cd549"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TP_SITUACAO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="890" y="0" width="120" height="20" uuid="dbb3a350-7101-4275-a7dd-28c068abd6a8"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_REALIZADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1010" y="0" width="120" height="20" uuid="7f0539cf-c337-4844-836d-4dd61417c684"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OBSERVACAO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1130" y="0" width="70" height="20" uuid="24588324-45bb-499e-aa78-f1b1dcc479c2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DURACAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
