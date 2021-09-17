@@ -141,6 +141,30 @@ public class CcController {
         }
     }
 
+    public void geraRelatorioOPME() {
+        try {
+            Map<String, Object> parametros = new HashMap<String, Object>();
+            parametros.put("data_inicial", dataInicial);
+            parametros.put("data_final", dataFinal);
+
+            ExecutorRelatorio executor = new ExecutorRelatorio("/relatorios/cc/opme.jasper",
+                    this.response, parametros, "relatorio_de_opme.xls");
+
+            Connection connection = ConnectionFactory.createConnectionToOracle();
+
+            executor.executeToExcel(connection);
+
+            if (executor.isRelatorioGerado()) {
+                facesContext.responseComplete();
+            } else {
+                JsfUtil.addErrorMessage("A execução do relatório não retornou dados.");
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SppController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void geraCirurgias() {
         try {
             Map<String, Object> parametros = new HashMap<String, Object>();

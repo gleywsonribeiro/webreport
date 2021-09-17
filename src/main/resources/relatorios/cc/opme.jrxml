@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="opme" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="49d63f98-533d-4f09-a251-69c52b411408">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="data_inicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="data_final" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *
+  FROM (
+
+        select rd.cd_registro_documento,
+                a.cd_atendimento,
+                a.cd_paciente rh,
+                p.nm_paciente paciente,
+                pd.ds_pergunta PERGUNTA,
+                CASE PD.CD_PERGUNTA_DOC
+                  WHEN 18502 THEN
+                   decode(rr.ds_resposta,
+                          'N;NÃO',
+                          'NÃO',
+                          'FKS;FIO KIRSCHNER/STEINMAN',
+                          'FIO KIRSCHNER/STEINMAN',
+                          'MC;MATERIAL CONSIGNADO',
+                          'MATERIAL CONSIGNADO',
+                          'CF;CONSIGNADO E FIO',
+                          'CONSIGNADO E FIO')
+                  ELSE
+                   RR.DS_RESPOSTA
+                END RESPOSTA
+          from registro_documento rd,
+                atendime           a,
+                paciente           p,
+                registro_resposta  rr,
+                pergunta_doc       pd
+         where rd.cd_documento = 92
+           and rd.cd_atendimento = a.cd_atendimento
+           --and rd.cd_atendimento = 1
+           and a.cd_paciente = p.cd_paciente
+           and rr.cd_registro_documento = rd.cd_registro_documento
+           and rr.cd_pergunta_doc = pd.cd_pergunta_doc
+           and pd.cd_pergunta_doc in (14482, 18502)
+	 and rd.sn_impresso = 'S'
+	 and rd.dt_registro between $P{data_inicial}  and  $P{data_final}
+ ) PIVOT(MAX(RESPOSTA) FOR PERGUNTA IN ('DT_CIR' AS DT_CIRURGIA, 'RC_OPM' AS RESPOSTA))]]>
+	</queryString>
+	<field name="CD_REGISTRO_DOCUMENTO" class="java.math.BigDecimal"/>
+	<field name="CD_ATENDIMENTO" class="java.math.BigDecimal"/>
+	<field name="RH" class="java.math.BigDecimal"/>
+	<field name="PACIENTE" class="java.lang.String"/>
+	<field name="DT_CIRURGIA" class="java.lang.String"/>
+	<field name="RESPOSTA" class="java.lang.String"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="54" height="20" uuid="154f6d29-875e-440d-8a5a-60b53886f0ca"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="0" width="73" height="20" uuid="72d3dc2a-d2a3-4932-81dc-b14568cd524e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atendimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="0" width="53" height="20" uuid="21900fa3-2066-4828-92f2-1e0ba6f8d34d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="222" height="20" uuid="8dd8082d-2765-4984-bfc3-c68f48da7b6c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paciente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="0" width="133" height="20" uuid="0dcc570e-357a-4bd4-90c6-06acd50935ea"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Cirurgia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="0" width="267" height="20" uuid="6e64bd20-1768-41af-850d-cfae951af3b4"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OPME]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="54" height="20" uuid="f78a0303-b995-43b7-8891-41d1c2bbb218"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_REGISTRO_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="0" width="73" height="20" uuid="783f75ab-9ec6-49ce-9caa-0135904f34ec"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CD_ATENDIMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="0" width="53" height="20" uuid="028962ce-2c5b-46ac-8376-ca098a92f478"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="222" height="20" uuid="dea02a03-2727-4fb3-94df-7b371a51ae46"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="0" width="133" height="20" uuid="86201213-0a07-4d51-9359-34695bdb26f6"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DT_CIRURGIA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="535" y="0" width="267" height="20" uuid="28f6a1d6-689d-40e5-a68a-f6eff37893fe"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RESPOSTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
