@@ -37,6 +37,7 @@ public class AuditoriaController {
     
     private Date dataInicial;
     private Date dataFinal;
+    private String competencia;
     
     
     public void grauComplexidadeToExcel() {
@@ -45,6 +46,13 @@ public class AuditoriaController {
         parametros.put("data_final", dataFinal);
 
         execute("/relatorios/auditoria/aval_score.jasper", "grau_complexidade.xls", parametros);
+    }
+
+    public void geraProntuarios() {
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        parametros.put("competencia", competencia);
+
+        execute("/relatorios/auditoria/prontuarios.jasper", "prontuarios.xls", parametros);
     }
     
     public void prescricaoMedica() {
@@ -90,5 +98,11 @@ public class AuditoriaController {
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
- 
+    public String getCompetencia() {
+        return competencia;
+    }
+
+    public void setCompetencia(String competencia) {
+        this.competencia = competencia;
+    }
 }

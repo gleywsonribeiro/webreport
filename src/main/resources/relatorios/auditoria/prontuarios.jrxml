@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="prontuarios" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="7bdfa1ee-5baf-4f56-bc72-a416b9840b81">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="competencia" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ESPECIALIDADE, COUNT(*) QTD
+  FROM (
+
+        SELECT COMPETENCIA, ESPECIALIDADE, PRONTUARIO
+          FROM (
+
+                 SELECT PM.CD_PRE_MED,
+                         PM.DT_PRE_MED,
+                         TO_CHAR(A.DT_ATENDIMENTO, 'MM/YYYY') COMPETENCIA,
+                         PM.CD_PRESTADOR,
+                         PRES.NM_PRESTADOR,
+                         E.DS_ESPECIALID ESPECIALIDADE,
+                         A.CD_ATENDIMENTO,
+                         A.DT_ATENDIMENTO,
+                         P.CD_PACIENTE PRONTUARIO,
+                         P.NM_PACIENTE PACIENTE
+                   FROM PRE_MED    PM,
+                         ATENDIME   A,
+                         PACIENTE   P,
+                         PRESTADOR  PRES,
+                         ESPECIALID E,
+                         ESP_MED    EM
+                  WHERE A.CD_ATENDIMENTO = PM.CD_ATENDIMENTO
+                    AND P.CD_PACIENTE = A.CD_PACIENTE
+                    AND PRES.CD_PRESTADOR = PM.CD_PRESTADOR
+                    AND PM.TP_PRE_MED = 'M'
+                    AND EM.CD_ESPECIALID = E.CD_ESPECIALID
+                    AND EM.CD_PRESTADOR = PRES.CD_PRESTADOR
+                    AND EM.SN_ESPECIAL_PRINCIPAL = 'S')
+
+
+         GROUP BY COMPETENCIA, ESPECIALIDADE, PRONTUARIO
+
+        )
+        WHERE COMPETENCIA = $P{competencia}
+ GROUP BY ESPECIALIDADE]]>
+	</queryString>
+	<field name="ESPECIALIDADE" class="java.lang.String"/>
+	<field name="QTD" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="206" height="20" uuid="1560a09f-0daf-4b2f-9468-272a15b0c0c6"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESPECIALIDADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="206" y="0" width="53" height="20" uuid="c2a35d38-8bd9-44bb-a375-bfae7d87d0ed"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QTD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="206" height="20" uuid="d5b4a959-2a05-437a-89cd-77fdfbbc810b"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESPECIALIDADE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="0" width="53" height="20" uuid="f2c27f9d-9e1a-4bce-b80a-28c9e0f4e5b7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QTD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
