@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ATENDIMENTOS DE URGÊNCIA(atualizado) - FAU" pageWidth="3060" pageHeight="621" orientation="Landscape" columnWidth="3060" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="b5891f8f-06bf-4195-9649-1d42be4bfdc2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -34,9 +33,6 @@
        prestador.nm_prestador as nome_medico,
        des_ate.ds_des_ate as sala,
        tip_res.ds_tip_res as Motivo_de_Alta,
-       esp_med.cd_especialid,
-       especialid.ds_especialid especialidade,
-       --cid.cd_cid as Codigo_Cid,
        cf.resposta codigo_cid,
        mot_ent.ds_mot_ent motivo_enttrada,
        loc_proced.ds_loc_proced as Local_Procedência
@@ -47,8 +43,6 @@
        atendime_info,
        prestador,
        tip_res,
-       esp_med,
-       especialid,
        cid,
        Mot_Ent,
        loc_proced,
@@ -62,10 +56,7 @@
    and prestador.cd_prestador = atendime.cd_prestador
    AND ATENDIME.tp_atendimento = 'U'
    and atendime.cd_tip_res = tip_res.cd_tip_res(+)
-   and prestador.cd_prestador = esp_med.cd_prestador
-   and esp_med.cd_especialid = especialid.cd_especialid
    and atendime.cd_des_ate = des_ate.cd_des_ate
-      -- and esp_med.sn_especial_principal = 'S'
    and atendime.cd_cid = cid.cd_cid(+)
    and mot_ent.cd_mot_ent(+) = ate_motivo.cd_mot_ent
    and loc_proced.cd_loc_proced = atendime.cd_loc_proced
@@ -80,6 +71,7 @@
 	<field name="RH" class="java.math.BigDecimal"/>
 	<field name="SEXO_PACIENTE" class="java.lang.String"/>
 	<field name="DATA_NASCIMENTO" class="java.sql.Timestamp"/>
+	<field name="IDADE_PAC" class="java.math.BigDecimal"/>
 	<field name="ENDEREÇO" class="java.lang.String"/>
 	<field name="BAIRRO" class="java.lang.String"/>
 	<field name="CIDADE" class="java.lang.String"/>
@@ -87,12 +79,9 @@
 	<field name="NOME_MEDICO" class="java.lang.String"/>
 	<field name="SALA" class="java.lang.String"/>
 	<field name="MOTIVO_DE_ALTA" class="java.lang.String"/>
-	<field name="CD_ESPECIALID" class="java.math.BigDecimal"/>
-	<field name="ESPECIALIDADE" class="java.lang.String"/>
 	<field name="CODIGO_CID" class="java.lang.String"/>
 	<field name="MOTIVO_ENTTRADA" class="java.lang.String"/>
 	<field name="LOCAL_PROCEDÊNCIA" class="java.lang.String"/>
-	<field name="IDADE_PAC" class="java.lang.Number"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -167,7 +156,7 @@
 				<text><![CDATA[BAIRRO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" mode="Opaque" x="2713" y="0" width="347" height="15" backcolor="#CCCCCC" uuid="75515ba3-60f3-4f69-a4bd-2debf8328ad1">
+				<reportElement key="staticText" mode="Opaque" x="2488" y="0" width="347" height="15" backcolor="#CCCCCC" uuid="75515ba3-60f3-4f69-a4bd-2debf8328ad1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
@@ -219,15 +208,6 @@
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[MOTIVO ENTRADA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="staticText" mode="Opaque" x="2488" y="0" width="225" height="15" backcolor="#CCCCCC" uuid="59075f02-5128-41f1-afa2-094837ecb3ac">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[ESPECIALIDADE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="staticText" mode="Opaque" x="1861" y="0" width="136" height="15" backcolor="#CCCCCC" uuid="60fd6c91-14ad-45e4-998b-12168a084b9c">
@@ -474,22 +454,7 @@
 				<textFieldExpression><![CDATA[$F{MOTIVO_DE_ALTA}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="2488" y="0" width="225" height="15" uuid="2dcfcace-24ee-4fca-9084-19cb2f4202bd">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ESPECIALIDADE}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="2713" y="0" width="347" height="15" uuid="30ad0027-176e-4aa7-85ad-352b6255c14f">
+				<reportElement key="textField" x="2488" y="0" width="347" height="15" uuid="30ad0027-176e-4aa7-85ad-352b6255c14f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
