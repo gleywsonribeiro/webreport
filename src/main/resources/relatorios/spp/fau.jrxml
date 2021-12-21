@@ -48,8 +48,8 @@
        loc_proced,
        des_ate,
        cid_fau cf
- where atendime.dt_atendimento between $P{data_inicial} and $P{data_final}
-   and atendime.cd_paciente = paciente.cd_paciente
+ where atendime.cd_paciente = paciente.cd_paciente
+   and atendime.dt_atendimento between $P{data_inicial} and $P{data_final}
    and paciente.cd_cidade = cidade.cd_cidade
    and atendime.cd_atendimento = ate_motivo.cd_atendimento(+)
    and atendime.cd_atendimento = atendime_info.cd_atendimento(+)
